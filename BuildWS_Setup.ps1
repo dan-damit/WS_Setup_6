@@ -15,43 +15,51 @@ if (-not $isAdmin) {
     Exit
 }
 
-# Clean obj and bin
-$projectRoot = "C:\Users\dan\WS_Setup_6"
-$foldersToClean = Get-ChildItem -Path $projectRoot -Recurse -Directory |
-    Where-Object { $_.Name -in @("bin", "obj") }
-
-foreach ($folder in $foldersToClean)
-{
-    try {
-        Remove-Item -Path $folder.FullName -Recurse -Force -ErrorAction Stop
-        Write-Host "Deleted: $($folder.FullName)"
-    }
-    catch {
-        Write-Warning "Failed to delete: $($folder.FullName) — $_"
-    }
+# Block to catch errors
+try {
+	# Clean obj and bin
+	$projectRoot = "C:\Users\dan\WS_Setup_6"
+	$foldersToClean = Get-ChildItem -Path $projectRoot -Recurse -Directory |
+		Where-Object { $_.Name -in @("bin", "obj") }
+	
+	foreach ($folder in $foldersToClean)
+	{
+		try {
+			Remove-Item -Path $folder.FullName -Recurse -Force -ErrorAction Stop
+			Write-Host "Deleted: $($folder.FullName)"
+		}
+		catch {
+			Write-Warning "Failed to delete: $($folder.FullName) — $_"
+		}
+	}
+	
+	Push-Location "C:\Users\dan\WS_Setup_6\WS_Setup_6.UI"
+	dotnet clean
+	dotnet restore
+	dotnet build -c Release
+	dotnet publish -c Release
+	Pop-Location
+	
+	signtool sign /fd SHA256 /f "C:\Users\dan\OneDrive\ADV_TECH\Scripts\Certs\SignCode_Expires_20260709.pfx" /p St@ff1234! /tr http://timestamp.digicert.com /td SHA256 "C:\Users\dan\WS_Setup_6\WS_Setup_6.UI\bin\Release\net8.0-windows\win-x64\Publish\WS_Setup_6.UI.exe"
+	
+	Push-Location "C:\Users\dan\WS_Setup_6\WS_Setup_6.MSI"
+	dotnet clean
+	dotnet restore
+	dotnet build -c Release
+	dotnet publish -c Release
+	Pop-Location
+	
+	signtool sign /fd SHA256 /f "C:\Users\dan\OneDrive\ADV_TECH\Scripts\Certs\SignCode_Expires_20260709.pfx" /p St@ff1234! /tr http://timestamp.digicert.com /td SHA256 "C:\Users\dan\WS_Setup_6\WS_Setup_6.MSI\Deploy\Release\en-us\WS_Setup_6.MSI.msi"
+	
+	Push-Location "C:\Users\dan\WS_Setup_6\WS_Setup_6.Bundle"
+	dotnet clean
+	dotnet restore
+	dotnet build -c Release
+	dotnet publish -c Release
+	Pop-Location
 }
-
-Push-Location "C:\Users\dan\WS_Setup_6\WS_Setup_6.UI"
-dotnet clean
-dotnet restore
-dotnet build -c Release
-dotnet publish -c Release
-Pop-Location
-
-signtool sign /fd SHA256 /f "C:\Users\dan\OneDrive\ADV_TECH\Scripts\Certs\SignCode_Expires_20260709.pfx" /p St@ff1234! /tr http://timestamp.digicert.com /td SHA256 "C:\Users\dan\WS_Setup_6\WS_Setup_6.UI\bin\Release\net8.0-windows\win-x64\Publish\WS_Setup_6.UI.exe"
-
-Push-Location "C:\Users\dan\WS_Setup_6\WS_Setup_6.MSI"
-dotnet clean
-dotnet restore
-dotnet build -c Release
-dotnet publish -c Release
-Pop-Location
-
-signtool sign /fd SHA256 /f "C:\Users\dan\OneDrive\ADV_TECH\Scripts\Certs\SignCode_Expires_20260709.pfx" /p St@ff1234! /tr http://timestamp.digicert.com /td SHA256 "C:\Users\dan\WS_Setup_6\WS_Setup_6.MSI\Deploy\Release\en-us\WS_Setup_6.MSI.msi"
-
-Push-Location "C:\Users\dan\WS_Setup_6\WS_Setup_6.Bundle"
-dotnet clean
-dotnet restore
-dotnet build -c Release
-dotnet publish -c Release
-Pop-Location
+catch {
+	$_ | Out-File "$env:USERPROFILE\WS_Setup_Build_Error.log" -Append
+    Write-Host "An error occurred. See log file for details."
+}
+Pause
