@@ -2,17 +2,11 @@
    This script builds the WS Setup executable 
    
 #>
-# Check for admin and relaunch hidden if needed
-$isAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
-if (-not $isAdmin) {
-    $ScriptPath = $MyInvocation.MyCommand.Definition
-    $psi = New-Object System.Diagnostics.ProcessStartInfo
-    $psi.FileName = "powershell.exe"
-    $psi.Arguments = "-ExecutionPolicy Bypass -File `"$ScriptPath`""
-    $psi.Verb = "runas"
-    # $psi.WindowStyle = "Hidden"  # Uncomment this to run hidden
-    [System.Diagnostics.Process]::Start($psi) | Out-Null
-    Exit
+# Check for admin and relaunch elevated if needed
+# Relaunch script as admin if needed
+if (-not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
+    Start-Process powershell "-ExecutionPolicy Bypass -File `"$PSCommandPath`"" -Verb RunAs
+    exit
 }
 
 # Block to catch errors
