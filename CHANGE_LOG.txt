@@ -73,3 +73,7 @@ C# and .NET8.0
 --All but 2 of the Dell apps have a silent uninstall option
 --Dell Optimizer 32bit and Dell Watchdog Timer seem to require interaction with a user
 --Release 6.7.1 has most up-to-date version now.
+
+2025096: Refactored Uninstall logic again since there are two (as of today) Dell oem products installed that do not have silent options for uninstall
+--ViewModel now runs through the selectedapps list once, and if there are any left (which should be the ones that don't have silent parameter options)
+  the ones that are left fire the UI for user interaction for uninstall.
