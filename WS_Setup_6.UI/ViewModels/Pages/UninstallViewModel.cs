@@ -136,7 +136,7 @@ namespace WS_Setup_6.UI.ViewModels
                 app.WasCancelled = result.WasCancelled;
             }
 
-            StatusMessage = $"Uninstall complete. {completed} apps processed silently, {remaining.Count} retried interactively.";
+            StatusMessage = $"Uninstall complete. {completed} apps processed.";
             IsUninstalling = false;
             await LoadAppsAsync();
         }
