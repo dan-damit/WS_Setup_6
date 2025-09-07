@@ -130,20 +130,18 @@
                 <StackPanel Orientation="Horizontal"
                             VerticalAlignment="Center">
 
-                    <!-- A. “45%” text, hidden when not uninstalling -->
+                    <!-- A. Percentage text -->
                     <TextBlock Text="{Binding ProgressPercentage, StringFormat={}{0}%}"
                                Margin="0,0,8,0"
-                               Visibility="{Binding IsUninstalling, 
-                     Converter={StaticResource BoolToVisibilityConverter}}" />
+                               VerticalAlignment="Center" />
 
-                    <!-- B. ProgressBar, hidden when not uninstalling -->
+                    <!-- B. ProgressBar -->
                     <ProgressBar Width="200"
                                  Height="16"
                                  Minimum="0"
                                  Maximum="{Binding BatchMax}"
                                  Value="{Binding BatchProgress, Mode=OneWay}"
-                                 Visibility="{Binding IsUninstalling,
-                     Converter={StaticResource BoolToVisibilityConverter}}" />
+                                 VerticalAlignment="Center" />
                 </StackPanel>
             </StatusBarItem>
         </StatusBar>

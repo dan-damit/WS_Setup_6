@@ -21,15 +21,22 @@ namespace WS_Setup_6.UI.ViewModels
 
         [ObservableProperty] private string statusMessage = string.Empty;
         [ObservableProperty] private bool isUninstalling;
-        [ObservableProperty] private int progressPercentage;
 
+        // Batch progress tracking
         public int BatchMax { get; private set; }
         private int _batchProgress;
         public int BatchProgress
         {
             get => _batchProgress;
-            private set => SetProperty(ref _batchProgress, value);
+            private set
+            {
+                if (SetProperty(ref _batchProgress, value))
+                    OnPropertyChanged(nameof(ProgressPercentage));
+            }
         }
+
+        // Computed property for progress percentage
+        public int ProgressPercentage => BatchMax == 0 ? 0 : (int)((BatchProgress / (double)BatchMax) * 100);
 
         public IAsyncRelayCommand LoadAppsCommand { get; }
         public IAsyncRelayCommand UninstallSelectedCommand { get; }
