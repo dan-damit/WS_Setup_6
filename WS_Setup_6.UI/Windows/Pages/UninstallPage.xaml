@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:behaviors="clr-namespace:WS_Setup_6.UI.Behaviors"
-             xmlns:conv="clr-namespace:WS_Setup_6.UI.Converters"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d"
@@ -11,8 +10,6 @@
              Width="800">
 
     <UserControl.Resources>
-        <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
-        <conv:NullToFalseConverter      x:Key="NullToFalseConverter" />
         <!-- Fix for XDG0010: Define AccentButtonStyle locally if not defined elsewhere -->
         <Style x:Key="AccentButtonStyle"
                TargetType="Button"
@@ -136,7 +133,9 @@
                                VerticalAlignment="Center" />
 
                     <!-- B. ProgressBar -->
-                    <ProgressBar Width="200"
+                    <ProgressBar Background="LightGray"
+                                 Foreground="Green"
+                                 Width="200"
                                  Height="16"
                                  Minimum="0"
                                  Maximum="{Binding BatchMax}"

@@ -110,6 +110,7 @@ namespace WS_Setup_6.UI.ViewModels
 
                 completed++;
                 BatchProgress = (int)((completed / (double)total) * BatchMax);
+                await Task.Yield();
             }
 
             StatusMessage = $"Batch uninstall complete. {completed} apps processed.";
@@ -134,6 +135,7 @@ namespace WS_Setup_6.UI.ViewModels
                 app.Success = result.Success;
                 app.ExitCode = result.ExitCode;
                 app.WasCancelled = result.WasCancelled;
+                await Task.Yield();
             }
 
             StatusMessage = $"Uninstall complete. {completed} apps processed.";
