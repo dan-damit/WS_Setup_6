@@ -74,6 +74,9 @@ C# and .NET8.0
 --Dell Optimizer 32bit and Dell Watchdog Timer seem to require interaction with a user
 --Release 6.7.1 has most up-to-date version now.
 
-2025096: Refactored Uninstall logic again since there are two (as of today) Dell oem products installed that do not have silent options for uninstall
+20250906: Refactored Uninstall logic again since there are two (as of today) Dell oem products installed that do not have silent options for uninstall
 --ViewModel now runs through the selectedapps list once, and if there are any left (which should be the ones that don't have silent parameter options)
   the ones that are left fire the UI for user interaction for uninstall.
+
+20250908: Removed ForceDeleteRemnants() method from the main ExecuteUninstallAsync() method
+--Added the ForeDeleteRemants() to it's own button Purge OEM Leftovers on UninstallPage.xaml
