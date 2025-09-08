@@ -14,6 +14,7 @@ namespace WS_Setup_6.UI.ViewModels
         private readonly ILogService _log;
         private readonly IUninstallService _uninstallService;
         private readonly IAppInventoryService _appInventoryService;
+        private readonly IDialogCoordinator _dialogCoordinator;
         private CancellationTokenSource? _cts;
 
         public ObservableCollection<UninstallEntry> InstalledApps { get; }
@@ -46,11 +47,13 @@ namespace WS_Setup_6.UI.ViewModels
         public UninstallViewModel(
             IUninstallService uninstallService,
             ILogService log,
-            IAppInventoryService appInventoryService)
+            IAppInventoryService appInventoryService
+            IDialogCoordinator dialogCoordinator)
         {
             _uninstallService = uninstallService;
             _log = log;
             _appInventoryService = appInventoryService;
+            _dialogCoordinator = dialogCoordinator;
 
             InstalledApps = new ObservableCollection<UninstallEntry>();
             SelectedApps = new ObservableCollection<UninstallEntry>();
