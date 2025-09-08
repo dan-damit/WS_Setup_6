@@ -80,12 +80,15 @@
                     Width="140"
                     Command="{Binding UninstallSelectedCommand}" />
 
-            <Button Content="Purge OEM Leftovers"
+            <Button Content="⚠ Purge OEM Leftovers"
                     Command="{Binding PurgeLeftoversCommand}"
                     Style="{StaticResource AccentButtonStyle}"
-                    Margin="0,12,0,0"
-                    HorizontalAlignment="Right"
-                    Width="200" />
+                    Margin="8,0,0,0"
+                    Width="200">
+                <Button.ToolTip>
+                    <ToolTip Content="Forcefully remove leftover files and registry entries from previously uninstalled apps. Use only after conventional uninstall." />
+                </Button.ToolTip>
+            </Button>
         </StackPanel>
 
         <!-- 3) Installed Apps List -->
