@@ -33,5 +33,22 @@ namespace WS_Setup_6.Core.Interfaces
         /// This will reorder the batch uninstall queue in the UI.
         /// </summary> 
         bool IsInteractiveOnly(UninstallEntry app);
+
+        /// <summary>
+        /// OEM purge for Dell leftover files and registry entries.
+        /// </summary>
+        /// <param name="app"></param>
+        /// <returns></returns>
+        Task<bool> IsStillInstalledAsync(UninstallEntry app);
+
+        /// <summary>
+        /// Forces the deletion of any remaining files, folders, or registry entries associated with the specified
+        /// application.
+        /// </summary>
+        /// <remarks>This method is intended to be used in scenarios where a standard uninstallation
+        /// process has left residual data. It attempts to clean up all associated remnants to ensure no traces of the
+        /// application remain.</remarks>
+        /// <param name="app">The application entry representing the software to remove remnants for. Cannot be null.</param>
+        public void ForceDeleteRemnants(UninstallEntry app);
     }
 }

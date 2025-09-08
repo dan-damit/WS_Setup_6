@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using MahApps.Metro.Controls.Dialogs;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
 using System.Runtime.Versioning;
@@ -42,6 +43,7 @@ namespace WS_Setup_6.UI.ViewModels
         // Load apps and Main uninstall hooks
         public IAsyncRelayCommand LoadAppsCommand { get; }
         public IAsyncRelayCommand UninstallSelectedCommand { get; }
+        public IAsyncRelayCommand PurgeLeftoversCommand { get; }
 
         // Enables or disables buttons based on user input
         public bool CanExecute => SelectedApps.Any() && !IsUninstalling;
@@ -49,7 +51,7 @@ namespace WS_Setup_6.UI.ViewModels
         public UninstallViewModel(
             IUninstallService uninstallService,
             ILogService log,
-            IAppInventoryService appInventoryService
+            IAppInventoryService appInventoryService,
             IDialogCoordinator dialogCoordinator)
         {
             _uninstallService = uninstallService;
@@ -65,6 +67,7 @@ namespace WS_Setup_6.UI.ViewModels
                 ExecuteBatchUninstallAsync,
                 () => CanExecute
             );
+            PurgeLeftoversCommand = new AsyncRelayCommand(ExecutePurgeLeftoversAsync);
             
             // Hook into selection changes so CanExecute re‑evaluates
             SelectedApps.CollectionChanged += (_, __) =>
@@ -151,8 +154,6 @@ namespace WS_Setup_6.UI.ViewModels
         }
 
         // Final "purge leftovers" command to scrub any remnants if any
-        public ICommand PurgeLeftoversCommand => new AsyncRelayCommand(ExecutePurgeLeftoversAsync);
-
         private async Task ExecutePurgeLeftoversAsync()
         {
             var settings = new MetroDialogSettings

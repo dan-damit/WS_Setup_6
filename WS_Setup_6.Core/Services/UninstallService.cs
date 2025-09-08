@@ -361,7 +361,7 @@ namespace WS_Setup_6.Core.Services
         }
 
         // Check disk or registry for leftovers
-        private static Task<bool> IsStillInstalledAsync(UninstallEntry app)
+        public Task<bool> IsStillInstalledAsync(UninstallEntry app)
         {
             if (!string.IsNullOrWhiteSpace(app.InstallLocation) &&
                 Directory.Exists(app.InstallLocation))
@@ -386,7 +386,7 @@ namespace WS_Setup_6.Core.Services
         }
 
         // Delete files + registry uninstall key
-        private static void ForceDeleteRemnants(UninstallEntry app)
+        public void ForceDeleteRemnants(UninstallEntry app)
         {
             if (!string.IsNullOrWhiteSpace(app.InstallLocation) &&
                 Directory.Exists(app.InstallLocation))
