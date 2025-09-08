@@ -7,37 +7,14 @@
                       xmlns:pages="clr-namespace:WS_Setup_6.UI.ViewModels.Pages"
                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                       xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
-                      mah:DialogParticipation.Register="MainHost"                     
+                      mah:DialogParticipation.Register="MainHost"
                       Title="Onboarding Application"
+                      FontSize="18"
                       Height="600"
                       Width="900"
                       WindowStartupLocation="CenterScreen"
-                      GlowBrush="{DynamicResource MahApps.Brushes.Accent}"
                       ResizeMode="CanResizeWithGrip"
-                      TitleBarHeight="48">
-    <!-- Refined title bar -->
-    <Controls:MetroWindow.TitleTemplate>
-        <DataTemplate>
-            <Grid Height="48">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Image x:Name="LogoImage"
-                       Height="32"
-                       VerticalAlignment="Center"
-                       Margin="16,0" />
-                <TextBlock Text="Advantage Technologies New Workstation Onboarding"
-                           Grid.Column="1"
-                           HorizontalAlignment="Center"
-                           VerticalAlignment="Center"
-                           FontSize="20"
-                           FontWeight="SemiBold"
-                           Foreground="White"
-                           Padding="0,0,16,0" />
-            </Grid>
-        </DataTemplate>
-    </Controls:MetroWindow.TitleTemplate>
+                      TitleBarHeight="36">
     <Grid>
         <Grid>
             <Grid.RowDefinitions>

@@ -24,8 +24,8 @@ namespace WS_Setup_6.UI.ViewModels
 
         // Batch progress tracking
         public int BatchMax { get; private set; }
-        private int _batchProgress;
-        public int BatchProgress
+        private double _batchProgress;
+        public double BatchProgress
         {
             get => _batchProgress;
             private set
@@ -36,7 +36,7 @@ namespace WS_Setup_6.UI.ViewModels
         }
 
         // Computed property for progress percentage
-        public int ProgressPercentage => BatchMax == 0 ? 0 : (int)((BatchProgress / (double)BatchMax) * 100);
+        public double ProgressPercentage => BatchMax == 0 ? 0 : (BatchProgress / BatchMax) * 100;
 
         public IAsyncRelayCommand LoadAppsCommand { get; }
         public IAsyncRelayCommand UninstallSelectedCommand { get; }

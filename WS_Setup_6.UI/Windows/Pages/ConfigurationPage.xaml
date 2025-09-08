@@ -42,6 +42,7 @@
             </StackPanel.Resources>
 
             <TextBlock Text="Domain Name:"
+                       FontSize="12"
                        Width="120"
                        VerticalAlignment="Center" />
             <TextBox Text="{Binding DomainName, UpdateSourceTrigger=PropertyChanged}"
@@ -60,6 +61,7 @@
 
             <TextBlock Text="Ninja Installer Path:"
                        Width="120"
+                       FontSize="12"
                        Margin="0,8,0,0"
                        VerticalAlignment="Center" />
             <TextBox Text="{Binding InstallPath, UpdateSourceTrigger=PropertyChanged}"

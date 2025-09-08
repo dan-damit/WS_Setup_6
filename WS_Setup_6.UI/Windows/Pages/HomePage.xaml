@@ -10,7 +10,8 @@
         <StackPanel VerticalAlignment="Center"
                     HorizontalAlignment="Center">
             <TextBlock Text="{Binding WelcomeMessage}"
-                       FontSize="24" />
+                       FontSize="28" 
+                       FontWeight="SemiBold"/>
             <TextBlock Text="{Binding Instruction}"
                        TextAlignment="Center"
                        Margin="0,8" />

@@ -7,6 +7,7 @@
         AllowsTransparency="True"
         Title="Reboot now?"
         Background="Transparent"
+        Foreground="Black"
         SizeToContent="WidthAndHeight"
         WindowStartupLocation="CenterOwner">
 
@@ -19,8 +20,8 @@
     </WindowChrome.WindowChrome>
 
     <!-- now draw your own window “chrome” -->
-    <Border Background="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"
-            BorderBrush="LightGray"
+    <Border Background="White"
+            BorderBrush="Black"
             BorderThickness="1"
             CornerRadius="3">
 
@@ -34,7 +35,7 @@
 
             <!-- your custom title bar -->
             <Border Grid.Row="0"
-                    Background="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"
+                    Background="CornflowerBlue"
                     MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
                 <TextBlock Text="{Binding Title, RelativeSource={RelativeSource AncestorType=Window}}"
                            VerticalAlignment="Center"
@@ -46,6 +47,7 @@
                         Margin="20"
                         Width="300">
                 <TextBlock Text="A reboot is required to finalize changes."
+                           FontSize="14"
                            TextWrapping="Wrap"
                            Margin="0,0,0,20"
                            HorizontalAlignment="Center" />
@@ -56,9 +58,13 @@
                             IsDefault="True"
                             Width="80"
                             Margin="0,0,10,0"
+                            Background="CornflowerBlue"
+                            Foreground="White"
                             Click="Reboot_Click" />
                     <Button Content="Exit"
                             IsCancel="True"
+                            Background="CornflowerBlue"
+                            Foreground="White"
                             Width="80" />
                 </StackPanel>
             </StackPanel>

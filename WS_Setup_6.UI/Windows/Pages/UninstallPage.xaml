@@ -3,9 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:behaviors="clr-namespace:WS_Setup_6.UI.Behaviors"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d"
              Height="450"
              Width="800">
 
@@ -15,7 +13,7 @@
                TargetType="Button"
                BasedOn="{StaticResource {x:Type Button}}">
             <Setter Property="Background"
-                    Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+                    Value="CornflowerBlue" />
             <Setter Property="Foreground"
                     Value="White" />
             <Setter Property="FontWeight"
@@ -94,6 +92,9 @@
                   SelectionMode="Extended"
                   SelectionUnit="FullRow"
                   GridLinesVisibility="None"
+                  BorderThickness="1"
+                  BorderBrush="Black"
+                  FontSize="14"
                   behaviors:DataGridSelectedItemsBehavior.SelectedItems="{Binding SelectedApps, Mode=TwoWay}">
 
             <DataGrid.Columns>
@@ -110,39 +111,49 @@
         </DataGrid>
 
         <StatusBar Grid.Row="3"
+                   Background="Transparent"
+                   Foreground="Black"
+                   BorderThickness="1"
+                   BorderBrush="Black"
                    Margin="0,12,0,0">
-            <!-- 1. Show StatusMessage on the left -->
-            <StatusBarItem>
-                <TextBlock Text="{Binding StatusMessage}"
-                           VerticalAlignment="Center" />
-            </StatusBarItem>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="500" />
+                    <!-- Status message -->
+                    <ColumnDefinition Width="Auto" />
+                    <!-- Percentage + ProgressBar -->
+                </Grid.ColumnDefinitions>
 
-            <!-- 2. Spacer to push progress to the right -->
-            <StatusBarItem HorizontalAlignment="Stretch">
-                <Grid />
-            </StatusBarItem>
+                <!-- 1. Status Message -->
+                <TextBlock Grid.Column="0"
+                           Foreground="Black"
+                           Text="{Binding StatusMessage}"
+                           VerticalAlignment="Center"
+                           Margin="4,0" />
 
-            <!-- 3. Right-aligned: percentage text + ProgressBar -->
-            <StatusBarItem HorizontalAlignment="Right">
-                <StackPanel Orientation="Horizontal"
-                            VerticalAlignment="Center">
+                <!-- 3. Progress Section -->
+                <StackPanel Grid.Column="2"
+                            Orientation="Horizontal"
+                            VerticalAlignment="Center"
+                            Margin="4,0">
 
-                    <!-- A. Percentage text -->
-                    <TextBlock Text="{Binding ProgressPercentage, StringFormat={}{0}%}"
+                    <!-- A. Percentage Text -->
+                    <TextBlock Text="{Binding ProgressPercentage, StringFormat={}{0:F1}%}"
                                Margin="0,0,8,0"
+                               Width="40"
                                VerticalAlignment="Center" />
 
                     <!-- B. ProgressBar -->
-                    <ProgressBar Background="LightGray"
-                                 Foreground="Green"
-                                 Width="200"
+                    <ProgressBar Width="200"
                                  Height="16"
                                  Minimum="0"
                                  Maximum="{Binding BatchMax}"
                                  Value="{Binding BatchProgress, Mode=OneWay}"
+                                 BorderThickness="1"
+                                 BorderBrush="Black"
                                  VerticalAlignment="Center" />
                 </StackPanel>
-            </StatusBarItem>
+            </Grid>
         </StatusBar>
     </Grid>
 </UserControl>
