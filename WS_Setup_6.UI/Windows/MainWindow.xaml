@@ -8,6 +8,8 @@
                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                       xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                       mah:DialogParticipation.Register="MainHost"
+                      Icon="pack://application:,,,/Assets/AdvTechLogo.ico"
+                      ShowIconOnTitleBar="True"
                       Title="Onboarding Application"
                       FontSize="18"
                       Height="600"
