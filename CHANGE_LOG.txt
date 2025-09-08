@@ -10,9 +10,10 @@ C# and .NET8.0
 
 -AdvTechSetup:
 --Assets
----AcroRdrInstaller.exe (Stand alone enterprise Acrobat Reader installer) (now on GitHub as a release)
+---InstallCert.exe
 ---AdvTechLogo.ico
 ---AdvTechLogo.png
+---AdvTechLogo.2.png
 ---AdvTechSplash.png
 ---AdvTechSplash.bmp
 ---WindowsDesktopRuntime .NETx64 installer
