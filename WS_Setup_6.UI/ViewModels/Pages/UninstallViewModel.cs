@@ -142,5 +142,46 @@ namespace WS_Setup_6.UI.ViewModels
             IsUninstalling = false;
             await LoadAppsAsync();
         }
+        public ICommand PurgeLeftoversCommand => new AsyncRelayCommand(ExecutePurgeLeftoversAsync);
+
+        private async Task ExecutePurgeLeftoversAsync()
+        {
+            var settings = new MetroDialogSettings
+            {
+                AffirmativeButtonText = "Proceed",
+                NegativeButtonText = "Cancel",
+                AnimateShow = true,
+                AnimateHide = true,
+                ColorScheme = MetroDialogColorScheme.Accented
+            };
+
+            var result = await _dialogCoordinator.ShowMessageAsync(
+                this,
+                "Confirm Cleanup",
+                "This will permanently delete leftover files and registry entries from previously uninstalled applications.\n\n" +
+                "⚠️ This should only be run *after* conventional uninstall methods have been attempted.\n\n" +
+                "Do you want to proceed?",
+                MessageDialogStyle.AffirmativeAndNegative,
+                settings
+            );
+
+            if (result == MessageDialogResult.Affirmative)
+            {
+                    foreach (var app in InstalledApps)
+                {
+                    if (await _uninstallService.IsStillInstalledAsync(app))
+                    {
+                        _log.Log($"Detected leftover install remnants for {app.DisplayName}, performing forced cleanup", "WARN");
+                        _uninstallService.ForceDeleteRemnants(app);
+                    }
+                }
+
+                StatusMessage = "OEM leftovers purged.";
+            }
+            else
+            {
+                StatusMessage = "Cleanup canceled.";
+            }
+        }
     }
 }
