@@ -39,9 +39,11 @@ namespace WS_Setup_6.UI.ViewModels
         // Computed property for progress percentage
         public double ProgressPercentage => BatchMax == 0 ? 0 : (BatchProgress / BatchMax) * 100;
 
+        // Load apps and Main uninstall hooks
         public IAsyncRelayCommand LoadAppsCommand { get; }
         public IAsyncRelayCommand UninstallSelectedCommand { get; }
 
+        // Enables or disables buttons based on user input
         public bool CanExecute => SelectedApps.Any() && !IsUninstalling;
 
         public UninstallViewModel(
@@ -72,6 +74,7 @@ namespace WS_Setup_6.UI.ViewModels
         partial void OnIsUninstallingChanged(bool oldValue, bool newValue) =>
             UninstallSelectedCommand.NotifyCanExecuteChanged();
 
+        // Scan for and load all installed apps based on what apps are currently registered
         private async Task LoadAppsAsync()
         {
             InstalledApps.Clear();
@@ -82,6 +85,7 @@ namespace WS_Setup_6.UI.ViewModels
             }
         }
 
+        // Main uninstall method (ochestrator)
         private async Task ExecuteBatchUninstallAsync()
         {
             IsUninstalling = true;
@@ -145,6 +149,8 @@ namespace WS_Setup_6.UI.ViewModels
             IsUninstalling = false;
             await LoadAppsAsync();
         }
+
+        // Final "purge leftovers" command to scrub any remnants if any
         public ICommand PurgeLeftoversCommand => new AsyncRelayCommand(ExecutePurgeLeftoversAsync);
 
         private async Task ExecutePurgeLeftoversAsync()
