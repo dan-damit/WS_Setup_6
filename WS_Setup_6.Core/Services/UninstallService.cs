@@ -138,13 +138,6 @@ namespace WS_Setup_6.Core.Services
                     exitCode = await RunExeAndWaitAsync(exe, args2, cancellationToken);
                 }
 
-                // Final cleanup: check for leftovers and force delete if needed
-                if (await IsStillInstalledAsync(app))
-                {
-                    _log.Log("Detected leftover install remnants, performing forced cleanup", "WARN");
-                    ForceDeleteRemnants(app);
-                }
-
                 return new UninstallResult(app, exitCode, success);
             }
             catch (Exception ex)
