@@ -165,8 +165,14 @@ namespace WS_Setup_6.UI.ViewModels
                 ColorScheme = MetroDialogColorScheme.Accented
             };
 
+            if (InstalledApps == null || InstalledApps.Count == 0)
+            {
+                StatusMessage = "No apps available for cleanup.";
+                return;
+            }
+
             var result = await _dialogCoordinator.ShowMessageAsync(
-                this,
+                "MainHost",
                 "Confirm Cleanup",
                 "This will permanently delete leftover files and registry entries from previously uninstalled applications.\n\n" +
                 "⚠️ This should only be run *after* conventional uninstall methods have been attempted.\n\n" +
@@ -192,6 +198,8 @@ namespace WS_Setup_6.UI.ViewModels
             {
                 StatusMessage = "Cleanup canceled.";
             }
+            
+            await LoadAppsAsync();
         }
     }
 }
