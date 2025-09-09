@@ -14,7 +14,6 @@ Deploy/
 *.cache
 *.log
 *.snk
-*.sln
 *.html
 *.htm
 
