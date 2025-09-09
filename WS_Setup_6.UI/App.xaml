@@ -10,6 +10,29 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Themes/Light.Blue.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            
+            <!-- Global Accent Button Style -->
+            <Style TargetType="Button"
+                   BasedOn="{StaticResource {x:Type Button}}">
+                <Setter Property="Background"
+                        Value="{DynamicResource MahApps.Brushes.Accent}" />
+                <Setter Property="Foreground"
+                        Value="White" />
+                <Setter Property="BorderBrush"
+                        Value="{DynamicResource MahApps.Brushes.Glow}" />
+                <Setter Property="BorderThickness"
+                        Value="1" />
+                <Setter Property="Padding"
+                        Value="8,4" />
+                <Setter Property="FontWeight"
+                        Value="SemiBold" />
+                <Setter Property="SnapsToDevicePixels"
+                        Value="True" />
+                <Setter Property="FontSize"
+                        Value="12" />
+                <Setter Property="FontWeight"
+                        Value="Normal" />
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -24,7 +24,7 @@
                     Width="150"
                     HorizontalAlignment="Left"
                     Margin="20,10,10,10"
-                    Background="CornflowerBlue"
+                    Height="35"
                     Command="{Binding ApplyBaselineCommand}" />
 
             <TextBlock Text="{Binding BaselineStatusMessage}"

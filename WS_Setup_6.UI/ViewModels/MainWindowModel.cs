@@ -1,17 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MahApps.Metro.Controls.Dialogs;
-using MaterialDesignThemes.Wpf;
-using Microsoft.Extensions.DependencyInjection;
-using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.Versioning;
 using System.Windows;
 using WS_Setup_6.Core.Interfaces;
-using WS_Setup_6.UI.ViewModels.Pages;
-using WS_Setup_6.UI.Windows;
-using WS_Setup_6.UI.Windows.Pages;
 
 namespace WS_Setup_6.UI.ViewModels
 {
@@ -27,6 +21,7 @@ namespace WS_Setup_6.UI.ViewModels
         public string? InstallPath { get; set; }
         private bool _isBusy;
         private readonly INavigationService _nav;
+        private readonly IDialogCoordinator _dialogCoordinator;
 
         // 1) Default value in the backing field does NOT fire OnSelectedPageChanged
         [ObservableProperty]
@@ -37,9 +32,10 @@ namespace WS_Setup_6.UI.ViewModels
         private object _currentView = default!;
 
         // 3) Constructor receives the NavService from DI
-        public MainWindowModel(INavigationService nav)
+        public MainWindowModel(INavigationService nav, IDialogCoordinator dialogCoordinator)
         {
             _nav = nav;
+            _dialogCoordinator = dialogCoordinator;
 
             // 4) Whenever NavService swaps the view, mirror it straight into CurrentView
             _nav.CurrentPageChanged += () =>
@@ -81,26 +77,45 @@ namespace WS_Setup_6.UI.ViewModels
 
         // 8) An Exit command if still need it
         [RelayCommand(CanExecute = nameof(CanExit))]
-        private Task ExitAsync()
+        private async Task ExitAsync()
         {
-            var dlg = new Windows.RebootDialog
+            var settings = new MetroDialogSettings
             {
-                Owner = Application.Current.MainWindow
+                AffirmativeButtonText = "Reboot",
+                NegativeButtonText = "Cancel",
+                FirstAuxiliaryButtonText = "Exit",
+                AnimateShow = true,
+                AnimateHide = true,
+                ColorScheme = MetroDialogColorScheme.Theme
             };
-            var reboot = dlg.ShowDialog() == true;
 
-            if (reboot)
+            var result = await _dialogCoordinator.ShowMessageAsync(
+                "MainHost",
+                "Exit Options",
+                "What would you like to do?",
+                MessageDialogStyle.AffirmativeAndNegativeAndSingleAuxiliary,
+                settings
+            );
+
+            switch (result)
             {
-                Process.Start(new ProcessStartInfo("shutdown", "/r /t 0")
-                {
-                    CreateNoWindow = true,
-                    UseShellExecute = false
-                });
+                case MessageDialogResult.Affirmative:
+                    Process.Start(new ProcessStartInfo("shutdown", "/r /t 0")
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false
+                    });
+                    Application.Current.Shutdown();
+                    break;
+
+                case MessageDialogResult.FirstAuxiliary:
+                    Application.Current.Shutdown();
+                    break;
+
+                case MessageDialogResult.Negative:
+                    // Do nothing — app stays open
+                    break;
             }
-
-            Application.Current.Shutdown();
-            return Task.CompletedTask;
-
         }
     }
 }

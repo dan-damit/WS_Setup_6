@@ -199,6 +199,7 @@ namespace WS_Setup_6.UI.ViewModels
                 StatusMessage = "Cleanup canceled.";
             }
             
+            await Task.Delay(500);
             await LoadAppsAsync();
         }
     }

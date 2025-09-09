@@ -16,7 +16,6 @@
                        TextAlignment="Center"
                        Margin="0,8" />
             <Button Content="Start Configuration"
-                    Background="CornflowerBlue"
                     Command="{Binding StartConfigurationCommand}"
                     Width="200"
                     Height="40" />

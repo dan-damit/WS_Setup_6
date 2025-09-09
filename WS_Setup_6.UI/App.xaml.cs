@@ -1,6 +1,5 @@
 ﻿// App.xaml.cs
 using MahApps.Metro.Controls.Dialogs;
-using ControlzEx.Theming;
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics;
 using System.IO;
@@ -97,13 +96,7 @@ namespace WS_Setup_6.UI
             nav.Register("LogPage", typeof(LogPage));
 
             //
-            // 7) Sync MahApps theme with system
-            //
-            ThemeManager.Current.ThemeSyncMode = ThemeSyncMode.SyncWithAccent;
-            ThemeManager.Current.SyncTheme();
-
-            //
-            // 8) Show shell and land on HomePage
+            // 7) Show shell and land on HomePage
             //
             var shell = ServiceProvider.GetRequiredService<MainWindow>();
             shell.Show();

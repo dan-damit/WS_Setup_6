@@ -7,48 +7,11 @@
              Height="450"
              Width="800">
 
-    <UserControl.Resources>
-        <!-- Fix for XDG0010: Define AccentButtonStyle locally if not defined elsewhere -->
-        <Style x:Key="AccentButtonStyle"
-               TargetType="Button"
-               BasedOn="{StaticResource {x:Type Button}}">
-            <Setter Property="Background"
-                    Value="CornflowerBlue" />
-            <Setter Property="Foreground"
-                    Value="White" />
-            <Setter Property="FontWeight"
-                    Value="SemiBold" />
-            <Setter Property="BorderThickness"
-                    Value="0" />
-            <Setter Property="Padding"
-                    Value="8,4" />
-            <Setter Property="Margin"
-                    Value="0" />
-            <Setter Property="Cursor"
-                    Value="Hand" />
-            <Setter Property="SnapsToDevicePixels"
-                    Value="True" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border Background="{TemplateBinding Background}"
-                                CornerRadius="3"
-                                SnapsToDevicePixels="True">
-                            <ContentPresenter HorizontalAlignment="Center"
-                                              VerticalAlignment="Center"
-                                              RecognizesAccessKey="True" />
-                        </Border>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </UserControl.Resources>
-
     <Grid Margin="16">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <!-- Header -->
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="45" />
             <!-- Toolbar -->
             <RowDefinition />
             <!-- DataGrid -->
@@ -70,19 +33,16 @@
 
             <Button Content="Load List"
                     Margin="0,0,8,0"
-                    Style="{StaticResource AccentButtonStyle}"
                     Width="100"
                     Command="{Binding LoadAppsCommand}" />
 
             <Button Content="Uninstall Selected"
                     Margin="0,0,0,0"
-                    Style="{StaticResource AccentButtonStyle}"
                     Width="140"
                     Command="{Binding UninstallSelectedCommand}" />
 
             <Button Content="⚠ Purge OEM Leftovers"
                     Command="{Binding PurgeLeftoversCommand}"
-                    Style="{StaticResource AccentButtonStyle}"
                     Margin="8,0,0,0"
                     Width="200">
                 <Button.ToolTip>
@@ -154,14 +114,15 @@
                                VerticalAlignment="Center" />
 
                     <!-- B. ProgressBar -->
-                    <ProgressBar Width="200"
-                                 Height="16"
-                                 Minimum="0"
-                                 Maximum="{Binding BatchMax}"
-                                 Value="{Binding BatchProgress, Mode=OneWay}"
-                                 BorderThickness="1"
-                                 BorderBrush="Black"
-                                 VerticalAlignment="Center" />
+                    <Controls:MetroProgressBar Width="200"
+                                               Height="16"
+                                               Minimum="0"
+                                               Maximum="{Binding BatchMax}"
+                                               Value="{Binding BatchProgress, Mode=OneWay}"
+                                               BorderThickness="1"
+                                               BorderBrush="{DynamicResource MahApps.Brushes.Glow}"
+                                               Foreground="{DynamicResource AccentColorBrush}"
+                                               VerticalAlignment="Center" />
                 </StackPanel>
             </Grid>
         </StatusBar>
