@@ -40,6 +40,14 @@ namespace WS_Setup_6.UI.ViewModels
         // Computed property for progress percentage
         public double ProgressPercentage => BatchMax == 0 ? 0 : (BatchProgress / BatchMax) * 100;
 
+        // Controls visibility of the progress bar area
+        private bool _isProgressVisible;
+        public bool IsProgressVisible
+        {
+            get => _isProgressVisible;
+            set => SetProperty(ref _isProgressVisible, value);
+        }
+
         // Load apps and Main uninstall hooks
         public IAsyncRelayCommand LoadAppsCommand { get; }
         public IAsyncRelayCommand UninstallSelectedCommand { get; }
@@ -92,6 +100,7 @@ namespace WS_Setup_6.UI.ViewModels
         private async Task ExecuteBatchUninstallAsync()
         {
             IsUninstalling = true;
+            IsProgressVisible = true;
             _cts?.Cancel();
             _cts = new CancellationTokenSource();
 
@@ -148,8 +157,11 @@ namespace WS_Setup_6.UI.ViewModels
                 await Task.Yield();
             }
 
+            // Final status update
             StatusMessage = $"Uninstall complete. {completed} apps processed.";
             IsUninstalling = false;
+            IsProgressVisible = false;
+            await Task.Delay(500);
             await LoadAppsAsync();
         }
 

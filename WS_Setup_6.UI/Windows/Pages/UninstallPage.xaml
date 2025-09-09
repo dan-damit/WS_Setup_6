@@ -3,15 +3,21 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
              xmlns:behaviors="clr-namespace:WS_Setup_6.UI.Behaviors"
+             xmlns:conv="clr-namespace:WS_Setup_6.UI.Converters"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              Height="450"
              Width="800">
 
+    <UserControl.Resources>
+        <conv:BoolToVisibilityConverter x:Key="BoolToVis"
+                                        CollapseInsteadOfHide="True" />
+    </UserControl.Resources>
+    
     <Grid Margin="16">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <!-- Header -->
-            <RowDefinition Height="45" />
+            <RowDefinition Height="Auto" />
             <!-- Toolbar -->
             <RowDefinition />
             <!-- DataGrid -->
@@ -102,25 +108,18 @@
                            Margin="4,0" />
 
                 <!-- 3. Progress Section -->
-                <StackPanel Grid.Column="2"
+                <StackPanel Grid.Column="1"
                             Orientation="Horizontal"
                             VerticalAlignment="Center"
                             Margin="4,0">
 
-                    <!-- A. Percentage Text -->
-                    <TextBlock Text="{Binding ProgressPercentage, StringFormat={}{0:F1}%}"
-                               Margin="0,0,8,0"
-                               Width="40"
-                               VerticalAlignment="Center" />
-
-                    <!-- B. ProgressBar -->
+                    <!-- B. Indeterminate ProgressBar -->
                     <Controls:MetroProgressBar Width="200"
                                                Height="16"
-                                               Minimum="0"
-                                               Maximum="{Binding BatchMax}"
-                                               Value="{Binding BatchProgress, Mode=OneWay}"
+                                               IsIndeterminate="True"
+                                               Visibility="{Binding IsProgressVisible, Converter={StaticResource BoolToVis}}"
                                                BorderThickness="1"
-                                               BorderBrush="{DynamicResource MahApps.Brushes.Glow}"
+                                               BorderBrush="Black"
                                                Foreground="{DynamicResource AccentColorBrush}"
                                                VerticalAlignment="Center" />
                 </StackPanel>

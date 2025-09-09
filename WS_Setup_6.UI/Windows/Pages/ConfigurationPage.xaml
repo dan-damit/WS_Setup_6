@@ -46,7 +46,7 @@
             <TextBox Text="{Binding DomainName, UpdateSourceTrigger=PropertyChanged}"
                      Width="400"
                      Margin="10,0,0,0"
-                     Tag="Leave blank to skip…" />
+                     Controls:TextBoxHelper.Watermark="Leave blank to skip…" />
         </StackPanel>
 
         <!-- Installer Path -->
@@ -58,22 +58,26 @@
             <TextBox Text="{Binding InstallPath, UpdateSourceTrigger=PropertyChanged}"
                      Width="400"
                      Margin="10,0,0,0"
-                     Tag="Leave blank to skip…" />
+                     Controls:TextBoxHelper.Watermark="Leave blank to skip…" />
         </StackPanel>
 
         <!-- Buttons -->
         <WrapPanel Margin="0,16,0,0"
-                   ItemWidth="140"
-                   ItemHeight="35">
+                   ItemWidth="140">
             <Button Content="FIND AGENT"
-                    Command="{Binding TestPathCommand}" />
+                    Command="{Binding TestPathCommand}">
+                <Button.ToolTip>
+                    <ToolTip Content="This will auto-seed the path from the Desktop, if the installer is on it."></ToolTip>
+                </Button.ToolTip>
+            </Button>
             <Button Content="BEGIN ONBOARD"
                     Command="{Binding BeginOnboardCommand}"
                     IsEnabled="{Binding CanBeginOnboard}" />
         </WrapPanel>
 
         <!-- Progress + Status -->
-        <Grid x:Name="ProgressArea" Margin="0,40,0,0">
+        <Grid x:Name="ProgressArea"
+              Margin="0,40,0,0">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
@@ -85,27 +89,12 @@
                                        Width="520"
                                        Margin="0,8,0,4"
                                        HorizontalAlignment="Left"
-                                       Minimum="0"
-                                       Maximum="100"
-                                       Value="{Binding ProgressValue, NotifyOnTargetUpdated=True}"
-                                       IsIndeterminate="{Binding IsIndeterminate}"
+                                       IsIndeterminate="True"
                                        Visibility="{Binding IsProgressVisible, Converter={StaticResource BoolToVis}}"
                                        Foreground="{DynamicResource AccentColorBrush}"
-                                       BorderBrush="{DynamicResource MahApps.Brushes.Glow}"
+                                       BorderBrush="Black"
                                        BorderThickness="1"
-                                       Opacity="1">
-                <Controls:MetroProgressBar.Triggers>
-                    <EventTrigger RoutedEvent="Binding.TargetUpdated">
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <DoubleAnimation Storyboard.TargetProperty="Value"
-                                                 Duration="0:0:0.3"
-                                                 EasingFunction="{StaticResource QuadraticEaseOut}" />
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </EventTrigger>
-                </Controls:MetroProgressBar.Triggers>
-            </Controls:MetroProgressBar>
+                                       Opacity="1" />
 
             <TextBlock Grid.Row="1"
                        Text="{Binding StatusText}"

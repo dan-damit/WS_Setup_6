@@ -16,22 +16,23 @@ namespace WS_Setup_6.UI.Windows.Pages
 
             vm.PropertyChanged += Vm_PropertyChanged;
 
-            // Initial state sync
-            UpdateVisualState(vm.ProgressState);
+            // Initial visibility sync
+            UpdateProgressVisibility(vm.IsProgressVisible);
         }
 
         private void Vm_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName != nameof(ConfigurationPageViewModel.ProgressState))
+            if (e.PropertyName != nameof(ConfigurationPageViewModel.IsProgressVisible))
                 return;
 
             if (sender is ConfigurationPageViewModel vm)
-                UpdateVisualState(vm.ProgressState);
+                UpdateProgressVisibility(vm.IsProgressVisible);
         }
 
-        private void UpdateVisualState(ConfigurationPageViewModel.ProgressVisualState state)
+        private void UpdateProgressVisibility(bool isVisible)
         {
-            VisualStateManager.GoToState(ProgressArea, state.ToString(), useTransitions: true);
+            string state = isVisible ? "Running" : "Idle";
+            VisualStateManager.GoToState(ProgressArea, state, useTransitions: true);
         }
     }
 }

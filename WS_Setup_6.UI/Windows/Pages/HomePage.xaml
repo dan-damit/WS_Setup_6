@@ -17,8 +17,7 @@
                        Margin="0,8" />
             <Button Content="Start Configuration"
                     Command="{Binding StartConfigurationCommand}"
-                    Width="200"
-                    Height="40" />
+                    Width="200" />
         </StackPanel>
     </UserControl>
 

@@ -19,7 +19,9 @@
                 <Setter Property="Foreground"
                         Value="White" />
                 <Setter Property="BorderBrush"
-                        Value="{DynamicResource MahApps.Brushes.Glow}" />
+                        Value="Black" />
+                <Setter Property="Height"
+                        Value="35" />
                 <Setter Property="Margin"
                         Value="0,0,12,0" />
                 <Setter Property="BorderThickness"

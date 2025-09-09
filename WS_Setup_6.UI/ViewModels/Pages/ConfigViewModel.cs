@@ -33,35 +33,6 @@ namespace WS_Setup_6.UI.ViewModels.Pages
 
         // ── Properties ──────────────────────────────────────────────
 
-        private ProgressVisualState progressState = ProgressVisualState.Idle;
-        public ProgressVisualState ProgressState
-        {
-            get => progressState;
-            private set => SetProperty(ref progressState, value);
-        }
-
-        private double _progressValue;
-        public double ProgressValue
-        {
-            get => _progressValue;
-            set
-            {
-                if (SetProperty(ref _progressValue, value))
-                    UpdateProgressState();
-            }
-        }
-
-        private bool _isIndeterminate;
-        public bool IsIndeterminate
-        {
-            get => _isIndeterminate;
-            set
-            {
-                if (SetProperty(ref _isIndeterminate, value))
-                    UpdateProgressState();
-            }
-        }
-
         private bool _isProgressVisible;
         public bool IsProgressVisible
         {
@@ -72,17 +43,6 @@ namespace WS_Setup_6.UI.ViewModels.Pages
         // ── Command Guards ──────────────────────────────────────────
         public bool CanExecuteBeginOnboard() => !IsOnboarding && CanBeginOnboard;
         private bool CanExecuteTestPath() => !IsTesting && !IsOnboarding;
-
-        // ── State Evaluation ────────────────────────────────────────
-        private void UpdateProgressState()
-        {
-            if (ProgressValue <= 0)
-                ProgressState = ProgressVisualState.Idle;
-            else if (ProgressValue >= 100 && !IsIndeterminate)
-                ProgressState = ProgressVisualState.Completed;
-            else
-                ProgressState = ProgressVisualState.Running;
-        }
 
         // ── Bindable Properties ────────────────────────────────────────
 
@@ -137,7 +97,6 @@ namespace WS_Setup_6.UI.ViewModels.Pages
             IsTesting = true;
             TestPathCommand.NotifyCanExecuteChanged();
             IsProgressVisible = true;
-            IsIndeterminate = true;
             StatusText = "Checking installer path…";
             SkipDomainAndAgent = false;
             _installerPath = null;
@@ -212,6 +171,7 @@ namespace WS_Setup_6.UI.ViewModels.Pages
             {
                 // 5) Re-enable “Test Path” button
                 IsTesting = false;
+                IsProgressVisible = false;
                 TestPathCommand.NotifyCanExecuteChanged();
             }
         }
@@ -221,9 +181,8 @@ namespace WS_Setup_6.UI.ViewModels.Pages
         private async Task BeginOnboardAsync()
         {
             IsOnboarding = true;
+            IsProgressVisible = true;
             StatusText = "Starting onboarding…";
-            IsIndeterminate = false;
-            ProgressValue = 0;
             _log.Log("Onboarding initiated", "INFO");
             bool hadErrors = false;
 
@@ -242,7 +201,6 @@ namespace WS_Setup_6.UI.ViewModels.Pages
                         msg => _log.Log(msg, "INFO"),
                         status => StatusText = status,
                         DomainJoinMaxRetries);
-                    ProgressValue = 5;
 
                     if (!joinOk)
                     {
@@ -269,7 +227,6 @@ namespace WS_Setup_6.UI.ViewModels.Pages
                             InstallPath ?? "",
                             msg => _log.Log(msg, "INFO"),
                             status => StatusText = status);
-                        ProgressValue = 10;
 
                         if (!string.IsNullOrEmpty(validPath))
                         {
@@ -309,12 +266,10 @@ namespace WS_Setup_6.UI.ViewModels.Pages
                         StatusText = "Installing agent…";
                         _log.Log("Beginning agent installation", "INFO");
                         await _onboardSvc.InstallAgentAsync(_installerPath!);
-                        ProgressValue = 15;
                     }
                     else
                     {
                         _log.Log("No installer path; skipping agent install", "WARNING");
-                        ProgressValue = 15;
                     }
                 }
 
@@ -322,7 +277,6 @@ namespace WS_Setup_6.UI.ViewModels.Pages
 
                 // ③ Chrome
                 StatusText = "Installing Chrome…";
-                ProgressValue = 20;
                 _log.Log("Installing Chrome", "INFO");
                 await _onboardSvc.InstallChromeAsync();
 
@@ -330,7 +284,6 @@ namespace WS_Setup_6.UI.ViewModels.Pages
 
                 // ④ Adobe Reader
                 StatusText = "Installing Adobe Reader…";
-                ProgressValue = 60;
                 _log.Log("Installing Adobe Reader", "INFO");
                 await _onboardSvc.InstallAdobeReaderAsync();
 
@@ -340,7 +293,6 @@ namespace WS_Setup_6.UI.ViewModels.Pages
             {
                 hadErrors = true;
                 _log.Log($"Unhandled error: {ex.Message}", "ERROR");
-                ProgressValue = 90;
             }
             finally
             {
@@ -348,18 +300,15 @@ namespace WS_Setup_6.UI.ViewModels.Pages
                 {
                     StatusText = "Onboarding completed with errors.";
                     _log.Log("One or more steps failed. Review log.", "ERROR");
-                    ProgressValue = 100;
-                    IsIndeterminate = true;
                 }
                 else
                 {
                     StatusText = "Configuration complete!";
                     _log.Log("Proceed to apply Baseline Tab.", "SUMMARY");
-                    ProgressValue = 100;
-                    IsIndeterminate = true;
                 }
 
                 IsOnboarding = false;
+                IsProgressVisible = false;
             }
         }
         #endregion Installer Button Commands

@@ -17,7 +17,9 @@ namespace WS_Setup_6.UI.Services
         {
             var settings = new LoginDialogSettings
             {
-                ShouldHideUsername = false
+                ShouldHideUsername = false,
+                UsernameWatermark = "DOMAIN\\username",
+                PasswordWatermark = "Domain password"
             };
 
             // Pass *exactly* the same dialogContext that your VM uses
