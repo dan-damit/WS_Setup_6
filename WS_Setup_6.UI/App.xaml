@@ -20,6 +20,8 @@
                         Value="White" />
                 <Setter Property="BorderBrush"
                         Value="{DynamicResource MahApps.Brushes.Glow}" />
+                <Setter Property="Margin"
+                        Value="0,0,12,0" />
                 <Setter Property="BorderThickness"
                         Value="1" />
                 <Setter Property="Padding"

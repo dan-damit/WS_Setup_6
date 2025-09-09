@@ -11,7 +11,7 @@ namespace WS_Setup_6.UI.ViewModels.Pages
     [SupportedOSPlatform("windows")]
     public partial class ConfigurationPageViewModel : ObservableObject
     {
-        // ── Declarations ────────────────────────────────────────────────
+        // ── Services ────────────────────────────────────────────────
         private const int DomainJoinMaxRetries = 3;
         private readonly IHelpersService _helpers;
         private readonly INavigationService _nav;
@@ -20,9 +20,48 @@ namespace WS_Setup_6.UI.ViewModels.Pages
         private readonly IDialogCoordinator _dialogCoordinator;
         private readonly ILogService _log;
 
+        // ── Fields ──────────────────────────────────────────────────
         private string? _installerPath;
 
-        // Progress visibility and indeterminate state
+        // ── Progress State Enum ─────────────────────────────────────
+        public enum ProgressVisualState
+        {
+            Idle,
+            Running,
+            Completed
+        }
+
+        // ── Properties ──────────────────────────────────────────────
+
+        private ProgressVisualState progressState = ProgressVisualState.Idle;
+        public ProgressVisualState ProgressState
+        {
+            get => progressState;
+            private set => SetProperty(ref progressState, value);
+        }
+
+        private double _progressValue;
+        public double ProgressValue
+        {
+            get => _progressValue;
+            set
+            {
+                if (SetProperty(ref _progressValue, value))
+                    UpdateProgressState();
+            }
+        }
+
+        private bool _isIndeterminate;
+        public bool IsIndeterminate
+        {
+            get => _isIndeterminate;
+            set
+            {
+                if (SetProperty(ref _isIndeterminate, value))
+                    UpdateProgressState();
+            }
+        }
+
         private bool _isProgressVisible;
         public bool IsProgressVisible
         {
@@ -30,26 +69,31 @@ namespace WS_Setup_6.UI.ViewModels.Pages
             set => SetProperty(ref _isProgressVisible, value);
         }
 
-        // Indicates if the progress bar is indeterminate (e.g., for long-running tasks)
-        private bool _isIndeterminate;
-        public bool IsIndeterminate
-        {
-            get => _isIndeterminate;
-            set => SetProperty(ref _isIndeterminate, value);
-        }
-
-
-        // Indicates if the onboarding process is currently running
-        private double _progressValue;
-        public double ProgressValue
-        {
-            get => _progressValue;
-            set => SetProperty(ref _progressValue, value);
-        }
-
-        // CanExecute methods for commands
+        // ── Command Guards ──────────────────────────────────────────
         public bool CanExecuteBeginOnboard() => !IsOnboarding && CanBeginOnboard;
         private bool CanExecuteTestPath() => !IsTesting && !IsOnboarding;
+
+        // ── State Evaluation ────────────────────────────────────────
+        private void UpdateProgressState()
+        {
+            if (ProgressValue <= 0)
+                ProgressState = ProgressVisualState.Idle;
+            else if (ProgressValue >= 100 && !IsIndeterminate)
+                ProgressState = ProgressVisualState.Completed;
+            else
+                ProgressState = ProgressVisualState.Running;
+        }
+
+        // ── Bindable Properties ────────────────────────────────────────
+
+        [ObservableProperty] private string domainName = "";
+        [ObservableProperty] private string installPath = "";
+        [ObservableProperty] private bool _isPathValid;
+        [ObservableProperty] private bool canBeginOnboard;
+        [ObservableProperty] private string? statusText;
+        [ObservableProperty] private bool isTesting;
+        [ObservableProperty] private bool _isOnboarding;
+        [ObservableProperty] private bool _skipDomainAndAgent;
 
         // ── Constructor ────────────────────────────────────────────────
         public ConfigurationPageViewModel(
@@ -80,17 +124,6 @@ namespace WS_Setup_6.UI.ViewModels.Pages
                 _log.Log($"Auto-seeded InstallPath → {seed}", "INFO");
             }
         }
-
-        // ── Bindable Properties ────────────────────────────────────────
-
-        [ObservableProperty] private string domainName = "";
-        [ObservableProperty] private string installPath = "";
-        [ObservableProperty] private bool _isPathValid;
-        [ObservableProperty] private bool canBeginOnboard;
-        [ObservableProperty] private string? statusText;
-        [ObservableProperty] private bool isTesting;
-        [ObservableProperty] private bool _isOnboarding;
-        [ObservableProperty] private bool _skipDomainAndAgent;
 
         // ── Commands ─────────────────────────────────────────────────
         #region Installer Button Commands

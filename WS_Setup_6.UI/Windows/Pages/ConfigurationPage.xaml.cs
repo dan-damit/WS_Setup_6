@@ -1,7 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.Versioning;
-using System.Security.Cryptography.X509Certificates;
 using System.Windows;
 using System.Windows.Controls;
 using WS_Setup_6.UI.ViewModels.Pages;
@@ -15,31 +13,25 @@ namespace WS_Setup_6.UI.Windows.Pages
         {
             InitializeComponent();
             DataContext = vm;
+
             vm.PropertyChanged += Vm_PropertyChanged;
+
+            // Initial state sync
+            UpdateVisualState(vm.ProgressState);
         }
 
         private void Vm_PropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            // Only care about progress updates
-            if (e.PropertyName != nameof(ConfigurationPageViewModel.ProgressValue))
+            if (e.PropertyName != nameof(ConfigurationPageViewModel.ProgressState))
                 return;
 
-            var vm = (ConfigurationPageViewModel?)sender;
-            if (vm == null)
-                return;
+            if (sender is ConfigurationPageViewModel vm)
+                UpdateVisualState(vm.ProgressState);
+        }
 
-            // Decide which VisualState to go to
-            string state;
-            if (vm.ProgressValue <= 0)
-                state = "Idle";
-            else if (vm.ProgressValue >= 100 && !vm.IsIndeterminate)
-                state = "Completed";
-            else
-                state = "Running";
-
-            // This line drives the storyboard you declared in XAML
-            VisualStateManager.GoToState(ProgressArea, state, true);
-
+        private void UpdateVisualState(ConfigurationPageViewModel.ProgressVisualState state)
+        {
+            VisualStateManager.GoToState(ProgressArea, state.ToString(), useTransitions: true);
         }
     }
 }
