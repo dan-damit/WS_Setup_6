@@ -71,3 +71,10 @@ C# and .NET8.0
 
 20250908: Removed ForceDeleteRemnants() method from the main ExecuteUninstallAsync() method
 --Added the ForeDeleteRemants() to it's own button Purge OEM Leftovers on UninstallPage.xaml
+
+20250909: Further polish on the UI
+--Added Button tooltips
+--Added watermarks on text input boxes
+--Changed both progress bars on ConfigPage and UninstallPage to always just be indeterminate
+----They still switch on or off whether or not tasks are running
+--Updates to font sizes to enhance readability 
