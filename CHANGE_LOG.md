@@ -30,6 +30,7 @@
 - Excluded Assets from single-file exe to improve cold starts
 - Bootstrapper renamed to `Setup.exe`
 - Assets copied to `C:\Working\Assets` at runtime
+- Migrated from PowerShell to NSIS bootstrapper to avoid loose files
 
 ### 2025-08-27 to 2025-08-31 — WiX Packaging
 - Migrated from NSIS to WiX
