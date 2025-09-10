@@ -3,7 +3,7 @@
 **Author:** Dan Damit  
 **Email:** dan@thedamits.com  
 **Platform:** Windows  
-**Tech Stack:** C#, .NET 8.0, WPF, MahApps.Metro
+**Tech Stack:** C#, .NET 8.0, WPF, MahApps.Metro, WiX
 
 ---
 
