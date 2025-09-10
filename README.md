@@ -61,4 +61,5 @@ Manual workstation setup is error-prone and time-consuming. This tool ensures ev
 
 Feel free to fork, adapt, or reach out with questions. This project is built for clarity, speed, and deployment-grade reliability.
 
-<img width="899" height="597" alt="image" src="https://github.com/user-attachments/assets/60409881-6004-4f78-bdf5-5da47fba3598" />
+<img width="900" height="601" alt="image" src="https://github.com/user-attachments/assets/92dc0ba4-234f-4fde-a263-4fb003bebae8" />
+
