@@ -34,6 +34,7 @@
 
 ### 2025-08-27 to 2025-08-31 — WiX Packaging
 - Migrated from NSIS to WiX
+- No longer uses `C:\Working\`
 - Built MSI packages and bundle installer
 - Refined licensing and UI logic
 
