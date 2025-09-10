@@ -9,7 +9,7 @@
 
 ## 🚀 Getting Started
 1. Clone the repo
-2. Run `WS.Setup.exe` from the latest Release link on the main page.
+2. Run `WS.Setup.exe` from the latest [Release link](https://github.com/dan-damit/WS_Setup_6/releases/tag/latest) on the main page.
 3. Ensure internet access for Onboarding tasks.
 
 ---
