@@ -8,7 +8,7 @@
 ---
 
 ## 🚀 Getting Started
-1. The latest release tag has the most up-te-date version.
+1. The latest release tag has the most up-to-date version.
 2. Run `WS.Setup.exe` from the latest [Release link](https://github.com/dan-damit/WS_Setup_6/releases/tag/latest) on the main page.
 3. Ensure internet access for Onboarding tasks.
 
