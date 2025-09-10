@@ -7,6 +7,14 @@
 
 ---
 
+## 🚀 Getting Started
+1. Clone the repo
+2. Run `WS Setup.exe` from the `Bundle\Deploy\Release` folder
+3. (Or download the latest release linked on the main page)
+4. Ensure internet access for Onboarding tasks.
+
+---
+
 ## 🎯 Purpose
 
 This is a personal project designed to streamline the onboarding process for new workstations. Originally built in PowerShell with Windows.Forms, it has since been fully rewritten in C# using WPF and MahApps.Metro for a modern, polished UI.
