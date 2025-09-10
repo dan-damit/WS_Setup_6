@@ -9,9 +9,8 @@
 
 ## 🚀 Getting Started
 1. Clone the repo
-2. Run `WS Setup.exe` from the `Bundle\Deploy\Release` folder
-3. (Or download the latest release linked on the main page)
-4. Ensure internet access for Onboarding tasks.
+2. Run `WS.Setup.exe` from the latest Release link on the main page.
+3. Ensure internet access for Onboarding tasks.
 
 ---
 
