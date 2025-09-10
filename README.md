@@ -30,8 +30,8 @@ This is a personal project designed to streamline the onboarding process for new
 - Live Execution Log as well as logging to file  
 - Automated certificate installation and runtime provisioning  
 - Domain-aware configuration inputs with watermarks and tooltips
-- Runs Baseline configuration based on the Baseline/ps1 script converted to yaml
-- DSCv3 applies Baseline in the WS_Config file (in Assets)  
+- Runs Baseline configuration based on the Baseline.ps1 script converted to yaml
+- DSCv3 applies Baseline - the WS_Config file (in Assets)  
 - Uninstaller logic with silent and interactive fallback modes  
 - Optional purge of OEM remnants (e.g., leftover Dell software)  
 - Indeterminate progress indicators for clean UX feedback    
