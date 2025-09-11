@@ -1,4 +1,4 @@
-# 📦 ADVTECH WS Setup Changelog
+# 📦 WS Setup Changelog
 
 **Author:** Dan Damit  
 **Email:** dan@thedamits.com  
