@@ -1,4 +1,4 @@
-# 🖥️ ADVTECH WS Setup Tool
+# 🖥️ WS Setup Tool
 
 **Author:** Dan Damit  
 **Email:** dan@thedamits.com  
@@ -72,11 +72,3 @@ Manual workstation setup is error-prone and time-consuming. This tool ensures ev
 ---
 
 Feel free to fork, adapt, or reach out with questions. This project is built for clarity, speed, and deployment-grade reliability.
-
----
-
-<img width="900" height="601" alt="image" src="https://github.com/user-attachments/assets/92dc0ba4-234f-4fde-a263-4fb003bebae8" />
-<img width="900" height="599" alt="image" src="https://github.com/user-attachments/assets/c6747499-29c7-447e-a235-a2ff1f64241b" />
-<img width="901" height="600" alt="image" src="https://github.com/user-attachments/assets/2a7b20dd-09f6-472c-9555-925205450d30" />
-<img width="900" height="599" alt="image" src="https://github.com/user-attachments/assets/841f5048-bffa-4bc2-ab35-0eeb692c656b" />
-<img width="901" height="599" alt="image" src="https://github.com/user-attachments/assets/e66fd054-335f-4f69-a833-ee2c4e090cc6" />
