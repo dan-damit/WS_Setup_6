@@ -9,12 +9,10 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<LangVersion>latest</LangVersion>
 
-		<AssemblyTitle>Advantage Technologies New Workstation Onboarding Tool</AssemblyTitle>
-		<Company>Advantage Technologies</Company>
+		<AssemblyTitle>New Workstation Onboarding Tool</AssemblyTitle>
 		<Author>Dan Damit</Author>
-		<ApplicationIcon>Assets\AdvTechLogo.ico</ApplicationIcon>
 		<ApplicationManifest>app.manifest</ApplicationManifest>
-		<Copyright>© 2025 Advantage Technologies. All rights reserved.</Copyright>
+		<ApplicationIcon>Assets\WSSetupIcon.ico</ApplicationIcon>
 
 		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
 		<SelfContained>false</SelfContained>
@@ -35,7 +33,6 @@
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 			<CopyToPublishDirectory>Always</CopyToPublishDirectory>
 		</Content>
-		<SplashScreen Include="Assets\AdvTechLogo.2.png" />
 	</ItemGroup>
 
 	<!-- 3. NuGet Dependencies -->

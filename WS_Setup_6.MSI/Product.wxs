@@ -42,7 +42,7 @@
 		</StandardDirectory>
 
 		<!-- Icon for Programs and Features and shortcut -->
-		<Icon Id="AppIcon" SourceFile="$(var.PublishDir)\Assets\AdvTechLogo.ico" />
+		<Icon Id="AppIcon" SourceFile="$(var.PublishDir)\Assets\WSSetupIcon.ico" />
 		<Property Id="ARPPRODUCTICON" Value="AppIcon" />
 
 		<!-- Feature -->

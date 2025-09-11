@@ -4,9 +4,9 @@
     <OutputName>WS Setup</OutputName>
     <ProductName>Workstation Onboarding</ProductName>
     <ProductVersion>6.7.0.0</ProductVersion>
-	<FileVersion>6.7.3.0</FileVersion>
-    <Manufacturer>Advantage Technologies</Manufacturer>
-    <ApplicationIcon>Assets\AdvTechLogo.ico</ApplicationIcon>
+	<FileVersion>6.7.5.0</FileVersion>
+    <Manufacturer>Dan.Damit</Manufacturer>
+    <ApplicationIcon>Assets\WSSetupIcon.ico</ApplicationIcon>
     <OutputPath>$(SolutionDir)Deploy\$(Configuration)\</OutputPath>
     <MainMSIPath>..\WS_Setup_6.MSI\Deploy\$(Configuration)\en-us\WS_Setup_6.MSI.msi</MainMSIPath>
     <DefineConstants>

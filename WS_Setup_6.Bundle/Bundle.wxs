@@ -13,17 +13,17 @@
 	<Bundle Name="$(var.ProductName)"
 			Version="$(var.ProductVersion)"
 			Manufacturer="$(var.Manufacturer)"
-			IconSourceFile="$(var.ProjectDir)Assets\AdvTechLogo.ico"
+			IconSourceFile="$(var.ProjectDir)Assets\WSSetupIcon.ico"
 			UpgradeCode="E578E12A-E636-4712-9AA7-3D58501EE7C4"
-			Copyright="Copyright © 2025 Advantage Technologies"
+			Copyright="Copyright © 2025 Dan.Damit"
 			Compressed="yes">
 
 		<BootstrapperApplication>
 			<bal:WixStandardBootstrapperApplication
 				  Theme="rtfLicense"
 				  LicenseFile="$(var.ProjectDir)\Assets\license.rtf"
-				  LogoFile="$(var.ProjectDir)Assets\AdvTechLogo.ico"
-				  LogoSideFile="$(var.ProjectDir)Assets\AdvTechLogo.ico"
+				  LogoFile="$(var.ProjectDir)Assets\WSSetupIcon.ico"
+				  LogoSideFile="$(var.ProjectDir)Assets\WSSetupIcon.ico"
 				  ShowVersion="yes" />
 		</BootstrapperApplication>
 
