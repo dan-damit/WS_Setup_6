@@ -8,7 +8,7 @@
                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                       xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                       mah:DialogParticipation.Register="MainHost"
-                      Icon="pack://application:,,,/Assets/AdvTechLogo.ico"
+                      Icon="pack://application:,,,/Assets/WSSetupIcon.ico"
                       ShowIconOnTitleBar="True"
                       Title="Onboarding Application"
                       FontSize="18"
@@ -50,15 +50,5 @@
                     VerticalAlignment="Bottom"
                     Margin="16" />
         </Grid>
-        <Image x:Name="LogoImage"
-               Opacity="0.15"
-               Stretch="Uniform"
-               MaxWidth="500"
-               MaxHeight="500"
-               HorizontalAlignment="Right"
-               VerticalAlignment="Bottom"
-               Margin="0,0,20,20"
-               IsHitTestVisible="False"
-               Panel.ZIndex="1" />
     </Grid>
 </Controls:MetroWindow>
