@@ -23,23 +23,6 @@ namespace WS_Setup_6.UI.ViewModels.Pages
         // ── Fields ──────────────────────────────────────────────────
         private string? _installerPath;
 
-        // ── Progress State Enum ─────────────────────────────────────
-        public enum ProgressVisualState
-        {
-            Idle,
-            Running,
-            Completed
-        }
-
-        // ── Properties ──────────────────────────────────────────────
-
-        private bool _isProgressVisible;
-        public bool IsProgressVisible
-        {
-            get => _isProgressVisible;
-            set => SetProperty(ref _isProgressVisible, value);
-        }
-
         // ── Command Guards ──────────────────────────────────────────
         public bool CanExecuteBeginOnboard() => !IsOnboarding && CanBeginOnboard;
         private bool CanExecuteTestPath() => !IsTesting && !IsOnboarding;
@@ -54,6 +37,7 @@ namespace WS_Setup_6.UI.ViewModels.Pages
         [ObservableProperty] private bool isTesting;
         [ObservableProperty] private bool _isOnboarding;
         [ObservableProperty] private bool _skipDomainAndAgent;
+        [ObservableProperty] private bool isProgressVisible;
 
         // ── Constructor ────────────────────────────────────────────────
         public ConfigurationPageViewModel(
@@ -74,8 +58,8 @@ namespace WS_Setup_6.UI.ViewModels.Pages
             var baseDir = AppDomain.CurrentDomain.BaseDirectory;
             var assets = Path.Combine(baseDir, "Assets");
 
-        // ── Auto-seed Installer Path if found ────────────────────────────
-        var seed = _helpers.FindAgentInstallerOnDesktop();
+            // ── Auto-seed Installer Path if found ────────────────────────────
+            var seed = _helpers.FindAgentInstallerOnDesktop();
             if (!string.IsNullOrEmpty(seed))
             {
                 InstallPath = seed;

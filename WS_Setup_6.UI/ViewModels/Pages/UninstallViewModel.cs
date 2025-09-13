@@ -23,6 +23,7 @@ namespace WS_Setup_6.UI.ViewModels
 
         [ObservableProperty] private string statusMessage = string.Empty;
         [ObservableProperty] private bool isUninstalling;
+        [ObservableProperty] private bool isProgressVisible;
 
         // Batch progress tracking
         public int BatchMax { get; private set; }
@@ -39,14 +40,6 @@ namespace WS_Setup_6.UI.ViewModels
 
         // Computed property for progress percentage
         public double ProgressPercentage => BatchMax == 0 ? 0 : (BatchProgress / BatchMax) * 100;
-
-        // Controls visibility of the progress bar area
-        private bool _isProgressVisible;
-        public bool IsProgressVisible
-        {
-            get => _isProgressVisible;
-            set => SetProperty(ref _isProgressVisible, value);
-        }
 
         // Load apps and Main uninstall hooks
         public IAsyncRelayCommand LoadAppsCommand { get; }
