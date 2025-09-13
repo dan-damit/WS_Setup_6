@@ -35,13 +35,6 @@ namespace WS_Setup_6.Core.Interfaces
         bool IsInteractiveOnly(UninstallEntry app);
 
         /// <summary>
-        /// OEM purge for Dell leftover files and registry entries.
-        /// </summary>
-        /// <param name="app"></param>
-        /// <returns></returns>
-        Task<bool> IsStillInstalledAsync(UninstallEntry app);
-
-        /// <summary>
         /// Forces the deletion of any remaining files, folders, or registry entries associated with the specified
         /// application.
         /// </summary>

@@ -195,13 +195,9 @@ namespace WS_Setup_6.UI.ViewModels
 
             if (result == MessageDialogResult.Affirmative)
             {
-                    foreach (var app in InstalledApps)
+                foreach (var app in InstalledApps)
                 {
-                    if (await _uninstallService.IsStillInstalledAsync(app))
-                    {
-                        _log.Log($"Detected leftover install remnants for {app.DisplayName}, performing forced cleanup", "WARN");
-                        _uninstallService.ForceDeleteRemnants(app);
-                    }
+                    _uninstallService.ForceDeleteRemnants(app);
                 }
 
                 StatusMessage = "OEM leftovers purged.";
@@ -210,7 +206,7 @@ namespace WS_Setup_6.UI.ViewModels
             {
                 StatusMessage = "Cleanup canceled.";
             }
-            
+
             await Task.Delay(500);
             await LoadAppsAsync();
         }

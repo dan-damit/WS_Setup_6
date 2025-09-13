@@ -150,39 +150,30 @@ namespace WS_Setup_6.Core.Services
         // Helper methods ---------------------------------------------------------------------------------------
         #region Helpers
 
-        // Known interactive-only uninstallers
-        private static readonly HashSet<string> InteractiveUninstallNames = new(StringComparer.OrdinalIgnoreCase)
-        {
-            "Dell Optimizer",
-            "Dell Watchdog Timer"
-        };
-
-        // Detect if uninstall string matches known interactive pattern
-        private bool MatchesInteractivePattern(string uninstallString)
-        {
-            if (string.IsNullOrWhiteSpace(uninstallString))
-                return false;
-
-            bool match = uninstallString.Contains("InstallShield", StringComparison.OrdinalIgnoreCase)
-                      && uninstallString.Contains("-remove", StringComparison.OrdinalIgnoreCase)
-                      && uninstallString.Contains("-runfromtemp", StringComparison.OrdinalIgnoreCase);
-
-            if (match)
-                _log.Log($"Matched interactive pattern: {uninstallString}", "DEBUG");
-
-            return match;
-        }
-
-        // Detect if app is known interactive-only uninstaller
+        // Categorize apps with no silent string or switches as interactive uninstalls
         public bool IsInteractiveOnly(UninstallEntry app)
         {
             var uninstallCmd = app.SilentUninstallString
                              ?? app.QuietUninstallString
                              ?? app.UninstallString;
 
-            bool isInteractive = InteractiveUninstallNames.Any(name =>
-                                    app.DisplayName?.Contains(name, StringComparison.OrdinalIgnoreCase) == true)
-                                 || MatchesInteractivePattern(uninstallCmd);
+            if (string.IsNullOrWhiteSpace(uninstallCmd))
+                return false;
+
+            // Known interactive-only patterns (InstallShield, etc.)
+            bool matchesInteractivePattern =
+                uninstallCmd.Contains("InstallShield", StringComparison.OrdinalIgnoreCase) &&
+                uninstallCmd.Contains("-remove", StringComparison.OrdinalIgnoreCase) &&
+                uninstallCmd.Contains("-runfromtemp", StringComparison.OrdinalIgnoreCase);
+
+            // If no silent switches are present, assume interactive
+            bool lacksSilentFlags =
+                !uninstallCmd.Contains("/quiet", StringComparison.OrdinalIgnoreCase) &&
+                !uninstallCmd.Contains("/qn", StringComparison.OrdinalIgnoreCase) &&
+                !uninstallCmd.Contains("/s", StringComparison.OrdinalIgnoreCase) &&
+                !uninstallCmd.Contains("/silent", StringComparison.OrdinalIgnoreCase);
+
+            bool isInteractive = matchesInteractivePattern || lacksSilentFlags;
 
             _log.Log($"Classified '{app.DisplayName}' as {(isInteractive ? "InteractiveOnly" : "Silent/MSI")}", "DEBUG");
 
@@ -360,55 +351,55 @@ namespace WS_Setup_6.Core.Services
             return proc.ExitCode;
         }
 
-        // Check disk or registry for leftovers
-        public Task<bool> IsStillInstalledAsync(UninstallEntry app)
-        {
-            if (!string.IsNullOrWhiteSpace(app.InstallLocation) &&
-                Directory.Exists(app.InstallLocation))
-            {
-                return Task.FromResult(true);
-            }
-
-            var keys = new[]
-            {
-                $@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{app.ProductKey}",
-                $@"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{app.ProductKey}"
-            };
-
-            foreach (var path in keys)
-            {
-                using var key = Registry.LocalMachine.OpenSubKey(path);
-                if (key != null)
-                    return Task.FromResult(true);
-            }
-
-            return Task.FromResult(false);
-        }
-
         // Delete files + registry uninstall key
         public void ForceDeleteRemnants(UninstallEntry app)
         {
-            if (!string.IsNullOrWhiteSpace(app.InstallLocation) &&
-                Directory.Exists(app.InstallLocation))
+            if (!string.IsNullOrWhiteSpace(app.DisplayName) &&
+                app.DisplayName.Contains("Dell", StringComparison.OrdinalIgnoreCase))
             {
-                try { Directory.Delete(app.InstallLocation, true); } catch { }
-            }
-
-            var keys = new[]
-            {
-                $@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{app.ProductKey}",
-                $@"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{app.ProductKey}"
-            };
-
-            foreach (var path in keys)
-            {
-                try
+                // 1. Delete install folder
+                if (!string.IsNullOrWhiteSpace(app.InstallLocation) &&
+                    Directory.Exists(app.InstallLocation))
                 {
-                    using var root = Registry.LocalMachine.OpenSubKey(
-                        Path.GetDirectoryName(path)!, writable: true);
-                    root?.DeleteSubKeyTree(Path.GetFileName(path), throwOnMissingSubKey: false);
+                    try
+                    {
+                        Directory.Delete(app.InstallLocation, true);
+                        _log.Log($"Deleted install folder: {app.InstallLocation}");
+                    }
+                    catch (Exception ex)
+                    {
+                        _log.Log($"Failed to delete folder: {app.InstallLocation} — {ex.Message}");
+                    }
                 }
-                catch { }
+
+                // 2. Delete registry keys
+                var keys = new[]
+                {
+                     $@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{app.ProductKey}",
+                     $@"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\{app.ProductKey}"
+                 };
+
+                foreach (var path in keys)
+                {
+                    try
+                    {
+                        var parentPath = Path.GetDirectoryName(path);
+                        var subKeyName = Path.GetFileName(path);
+
+                        using var root = Registry.LocalMachine.OpenSubKey(parentPath!, writable: true);
+                        root?.DeleteSubKeyTree(subKeyName, throwOnMissingSubKey: false);
+
+                        _log.Log($"Deleted registry key: {path}");
+                    }
+                    catch (Exception ex)
+                    {
+                        _log.Log($"Failed to delete registry key: {path} — {ex.Message}");
+                    }
+                }
+            }
+            else
+            {
+                _log.Log($"Skipped deletion for: {app.DisplayName}");
             }
         }
 
