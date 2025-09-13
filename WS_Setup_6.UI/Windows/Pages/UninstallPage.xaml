@@ -7,10 +7,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              Height="450"
              Width="800">
+    
     <UserControl.Resources>
         <conv:BoolToVisibilityConverter x:Key="BoolToVis"
                                         CollapseInsteadOfHide="True" />
     </UserControl.Resources>
+    
     <Grid Margin="16">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
