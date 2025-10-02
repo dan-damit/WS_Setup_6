@@ -3,8 +3,8 @@
     <OutputType>Bundle</OutputType>
     <OutputName>WS Setup</OutputName>
     <ProductName>Workstation Onboarding</ProductName>
-    <ProductVersion>6.7.0.0</ProductVersion>
-	<FileVersion>6.7.5.0</FileVersion>
+    <ProductVersion>6.8.7.0</ProductVersion>
+	<FileVersion>6.8.7.0</FileVersion>
     <Manufacturer>Dan.Damit</Manufacturer>
     <ApplicationIcon>Assets\WSSetupIcon.ico</ApplicationIcon>
     <OutputPath>$(SolutionDir)Deploy\$(Configuration)\</OutputPath>

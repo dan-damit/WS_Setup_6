@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.Versioning;
 using System.Threading.Tasks;
+using System.ComponentModel;
+using System.Security.Principal;
 using WS_Setup_6.Common.Interfaces;
 using WS_Setup_6.Common.Logging;
 using WS_Setup_6.Core.Interfaces;
@@ -48,71 +50,79 @@ namespace WS_Setup_6.Core.Services
         {
             _log.Log("Configuring baseline via DSC", "INFO");
 
-            // locate DSC.exe and pwsh.exe
-            var programFiles = Environment.GetFolderPath(
-                Environment.SpecialFolder.ProgramFiles);
+            var programFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
             var dscExe = Path.Combine(programFiles, "DSC3", "DSC.exe");
             var pwsh = Path.Combine(programFiles, "PowerShell", "7", "pwsh.exe");
 
             if (!File.Exists(dscExe) || !File.Exists(pwsh))
             {
-                _log.Log(
-                    $"Missing DSC.exe ({dscExe}) or pwsh.exe ({pwsh})",
-                    "ERROR");
+                _log.Log($"Missing DSC.exe ({dscExe}) or pwsh.exe ({pwsh})", "ERROR");
                 return Task.CompletedTask;
             }
 
-            // build the process start info
-            var psi = new ProcessStartInfo(dscExe)
-            {
-                UseShellExecute = false,
-                CreateNoWindow = true,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true
-            };
-            psi.Environment["DSC_HOST_PATH"] = pwsh;
-            psi.Environment["PATH"] =
-                Path.GetDirectoryName(pwsh)! + ";" +
-                psi.Environment["PATH"];
-            psi.ArgumentList.Add("config");
-            psi.ArgumentList.Add("set");
-            psi.ArgumentList.Add("-f");
-            psi.ArgumentList.Add(yamlPath);
+            // Build a PowerShell script that sets env vars then runs DSC
+            var dscExeQuoted = $"'{dscExe.Replace("'", "''")}'";
+            var yamlQuoted = $"'{yamlPath.Replace("'", "''")}'";
+            var pwshDir = Path.GetDirectoryName(pwsh) ?? string.Empty;
+            var pwshDirEscaped = pwshDir.Replace("'", "''");
 
-            // run DSC asynchronously and hook output
+            var psCommand = $@"
+$env:DSC_HOST_PATH = {dscExeQuoted};
+$env:PATH = '{pwshDirEscaped};' + $env:PATH;
+& {dscExeQuoted} config set -f {yamlQuoted}
+";
+
+            var psi = new ProcessStartInfo(pwsh)
+            {
+                UseShellExecute = true,
+                WindowStyle = ProcessWindowStyle.Normal,
+                WorkingDirectory = pwshDir,
+                Arguments = $"-NoExit -ExecutionPolicy Bypass -Command \"{psCommand.Trim().Replace("\"", "\\\"")}\""
+            };
+
+            // Set Verb="runas" only when not already elevated
+            if (!IsProcessElevated())
+                psi.Verb = "runas";
+
+            _log.Log($"Launching visible PowerShell to run DSC (DSC_HOST_PATH set to {dscExe}){(psi.Verb == "runas" ? " with elevation" : string.Empty)}", "INFO");
+
             return Task.Run(() =>
             {
-                using var proc = new Process
+                try
                 {
-                    StartInfo = psi,
-                    EnableRaisingEvents = true
-                };
+                    using var proc = Process.Start(psi);
+                    if (proc == null)
+                    {
+                        _log.Log("Failed to start PowerShell for DSC", "ERROR");
+                        return;
+                    }
 
-                proc.OutputDataReceived += (_, e) =>
-                {
-                    if (!string.IsNullOrEmpty(e.Data))
-                        _log.Log(e.Data, "DEBUG");
-                };
-                proc.ErrorDataReceived += (_, e) =>
-                {
-                    if (!string.IsNullOrEmpty(e.Data))
-                        _log.Log(e.Data, "ERROR");
-                };
+                    proc.WaitForExit();
 
-                proc.Start();
-                proc.BeginOutputReadLine();
-                proc.BeginErrorReadLine();
-                proc.WaitForExit();
-
-                if (proc.ExitCode != 0)
-                {
-                    _log.Log($"DSC exited with code {proc.ExitCode}", "ERROR");
+                    if (proc.ExitCode != 0)
+                        _log.Log($"PowerShell/DSC exited with code {proc.ExitCode}", "ERROR");
+                    else
+                        _log.Log("PowerShell/DSC process exited (console left open for tech inspection)", "SUMMARY");
                 }
-                else
+                catch (Win32Exception wex) when ((uint)wex.ErrorCode == 0x80004005 || wex.NativeErrorCode == 1223)
                 {
-                    _log.Log("Baseline configuration applied successfully", "SUMMARY");
+                    // 1223 = ERROR_CANCELLED (user cancelled UAC)
+                    _log.Log("Elevation was cancelled by the user. DSC run aborted.", "WARN");
+                }
+                catch (Exception ex)
+                {
+                    _log.Log($"Failed to launch PowerShell for DSC — {ex.Message}", "ERROR");
                 }
             });
+        }
+
+        // Check if the current process is running with elevated (admin) privileges
+        // Used in RunDscSimpleAsync to decide whether to set Verb="runas"
+        private static bool IsProcessElevated()
+        {
+            using var identity = WindowsIdentity.GetCurrent();
+            var principal = new WindowsPrincipal(identity);
+            return principal.IsInRole(WindowsBuiltInRole.Administrator);
         }
     }
 }
