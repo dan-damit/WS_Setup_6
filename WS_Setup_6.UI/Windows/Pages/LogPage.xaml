@@ -15,10 +15,11 @@
 
         <TextBlock Text="Execution Log"
                    FontSize="24"
+                   Foreground="{DynamicResource MahApps.Brushes.Accent}"
                    Margin="8" />
 
         <Border Grid.Row="1"
-                BorderBrush="DarkSlateGray"
+                BorderBrush="{DynamicResource MahApps.Brushes.Accent}"
                 BorderThickness="1"
                 CornerRadius="3"
                 Padding="8"
@@ -29,6 +30,7 @@
                      ItemsSource="{Binding LogEntries}"
                      behaviors:ListBoxExtensions.AutoScrollToEnd="True"
                      Background="Transparent"
+                     Foreground="{DynamicResource MahApps.Brushes.Accent}"
                      ScrollViewer.VerticalScrollBarVisibility="Auto"
                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                      HorizontalContentAlignment="Stretch"

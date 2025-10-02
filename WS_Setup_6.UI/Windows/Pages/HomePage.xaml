@@ -10,10 +10,12 @@
         <StackPanel VerticalAlignment="Center"
                     HorizontalAlignment="Center">
             <TextBlock Text="{Binding WelcomeMessage}"
-                       FontSize="28" 
+                       FontSize="28"
+                       Foreground="{DynamicResource MahApps.Brushes.Accent}"
                        FontWeight="SemiBold"/>
             <TextBlock Text="{Binding Instruction}"
                        TextAlignment="Center"
+                       Foreground="{DynamicResource MahApps.Brushes.Accent}"
                        Margin="0,8" />
             <Button Content="Start Configuration"
                     Command="{Binding StartConfigurationCommand}"

@@ -12,12 +12,14 @@
         <StackPanel>
             <TextBlock Text="Apply Baseline Configuration"
                        FontSize="18"
+                       Foreground="{DynamicResource MahApps.Brushes.Accent}"
                        FontWeight="Bold"
                        Margin="0,0,0,10" />
 
             <TextBlock Text="This will apply the standard workstation baseline including registry tweaks, scheduled tasks, and service adjustments."
                        TextWrapping="Wrap"
                        FontSize="14"
+                       Foreground="{DynamicResource MahApps.Brushes.Accent}"
                        Margin="0,0,0,20" />
 
             <Button Content="Run Baseline"

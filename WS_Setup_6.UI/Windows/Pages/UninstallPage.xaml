@@ -9,8 +9,7 @@
              Width="800">
     
     <UserControl.Resources>
-        <conv:BoolToVisibilityConverter x:Key="BoolToVis"
-                                        CollapseInsteadOfHide="True" />
+        <conv:BoolToVisibilityConverter x:Key="BoolToVis"/>
     </UserControl.Resources>
     
     <Grid Margin="16">
@@ -28,6 +27,7 @@
         <!-- 1) Page Title -->
         <TextBlock Grid.Row="0"
                    Text="Uninstall Applications"
+                   Foreground="{DynamicResource MahApps.Brushes.Accent}"
                    FontSize="24"
                    FontWeight="SemiBold"
                    Margin="0,0,0,12" />
@@ -69,7 +69,7 @@
                   SelectionUnit="FullRow"
                   GridLinesVisibility="None"
                   BorderThickness="1"
-                  BorderBrush="Black"
+                  BorderBrush="{DynamicResource MahApps.Brushes.Accent}"
                   FontSize="14"
                   behaviors:DataGridSelectedItemsBehavior.SelectedItems="{Binding SelectedApps, Mode=TwoWay}">
 
@@ -88,9 +88,9 @@
 
         <StatusBar Grid.Row="3"
                    Background="Transparent"
-                   Foreground="Black"
+                   Foreground="White"
                    BorderThickness="1"
-                   BorderBrush="Black"
+                   BorderBrush="{DynamicResource MahApps.Brushes.Accent}"
                    Margin="0,12,0,0">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -119,7 +119,7 @@
                                                IsIndeterminate="True"
                                                Visibility="{Binding IsProgressVisible, Converter={StaticResource BoolToVis}}"
                                                BorderThickness="1"
-                                               BorderBrush="Black"
+                                               BorderBrush="{DynamicResource MahApps.Brushes.Accent}"
                                                Foreground="{DynamicResource AccentColorBrush}"
                                                VerticalAlignment="Center" />
                 </StackPanel>

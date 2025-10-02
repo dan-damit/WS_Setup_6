@@ -11,8 +11,7 @@
     <UserControl.Resources>
         <QuadraticEase x:Key="QuadraticEaseOut"
                        EasingMode="EaseOut" />
-        <conv:BoolToVisibilityConverter x:Key="BoolToVis"
-                                        CollapseInsteadOfHide="True" />
+        <conv:BoolToVisibilityConverter x:Key="BoolToVis" />
 
         <!-- Shared row layout -->
         <Style x:Key="FormRowStyle"
@@ -34,12 +33,14 @@
         <!-- Header -->
         <TextBlock Text="Setup"
                    FontSize="18"
+                   Foreground="{DynamicResource MahApps.Brushes.Accent}"
                    Margin="100,0,0,25"
                    FontWeight="SemiBold" />
 
         <!-- Domain Name -->
         <StackPanel Style="{StaticResource FormRowStyle}">
             <TextBlock Text="Domain Name:"
+                       Foreground="{DynamicResource MahApps.Brushes.Accent}"
                        FontSize="14"
                        Width="120"
                        VerticalAlignment="Center" />
@@ -52,6 +53,7 @@
         <!-- Installer Path -->
         <StackPanel Style="{StaticResource FormRowStyle}">
             <TextBlock Text="Ninja Installer Path:"
+                       Foreground="{DynamicResource MahApps.Brushes.Accent}"
                        FontSize="14"
                        Width="120"
                        VerticalAlignment="Center" />
@@ -99,7 +101,7 @@
             <TextBlock Grid.Row="1"
                        Text="{Binding StatusText}"
                        FontStyle="Italic"
-                       Foreground="DarkSlateGray"
+                       Foreground="{DynamicResource MahApps.Brushes.Accent}"
                        Margin="0,12,0,0"
                        TextWrapping="Wrap" />
         </Grid>
