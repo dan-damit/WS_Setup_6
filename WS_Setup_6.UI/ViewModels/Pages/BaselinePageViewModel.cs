@@ -146,7 +146,7 @@ namespace WS_Setup_6.UI.ViewModels.Pages
                 {
                     ProgressValue = 85;
                     _log.Log("Applying baseline via DSC", "INFO");
-                    await _baseline.RunDscSimpleAsync(_decYaml);
+                    await _baseline.RunDscWithWrapperAsync(_decYaml);
                 }
                 else
                 {

@@ -46,9 +46,9 @@ namespace WS_Setup_6.Core.Services
         /// Executes DSC in “set” mode against the given YAML config.
         /// All output and errors are shipped through ILogService.
         /// </summary>
-        public Task RunDscSimpleAsync(string yamlPath)
+        public Task RunDscWithWrapperAsync(string yamlPath)
         {
-            _log.Log("Configuring baseline via DSC", "INFO");
+            _log.Log("Configuring baseline via DSC (visible PowerShell wrapper)", "INFO");
 
             var programFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
             var dscExe = Path.Combine(programFiles, "DSC3", "DSC.exe");
@@ -60,31 +60,90 @@ namespace WS_Setup_6.Core.Services
                 return Task.CompletedTask;
             }
 
-            // Build a PowerShell script that sets env vars then runs DSC
-            var dscExeQuoted = $"'{dscExe.Replace("'", "''")}'";
-            var yamlQuoted = $"'{yamlPath.Replace("'", "''")}'";
+            // Prepare safe-quoted values for PowerShell
+            string QuoteForPs(string s) => $"'{s.Replace("'", "''")}'";
+            var dscExeQuoted = QuoteForPs(dscExe);
+            var yamlQuoted = QuoteForPs(yamlPath);
             var pwshDir = Path.GetDirectoryName(pwsh) ?? string.Empty;
-            var pwshDirEscaped = pwshDir.Replace("'", "''");
+            var pwshDirQuoted = QuoteForPs(pwshDir);
 
-            var psCommand = $@"
-$env:DSC_HOST_PATH = {dscExeQuoted};
-$env:PATH = '{pwshDirEscaped};' + $env:PATH;
-& {dscExeQuoted} config set -f {yamlQuoted}
+            // Create temporary ps1 wrapper
+            var tempPs1 = Path.Combine(Path.GetTempPath(), $"dsc_wrapper_{Guid.NewGuid():N}.ps1");
+
+            // Build wrapper script
+            var psScript = $@"
+# DSC wrapper generated {DateTime.UtcNow:O}
+# Sets DSC_HOST_PATH and PATH, suppresses progress, stabilizes buffer, transcripts output, and leaves console open.
+
+$ErrorActionPreference = 'Continue'
+$ProgressPreference = 'SilentlyContinue'
+
+try {{
+    $raw = $Host.UI.RawUI
+    # Attempt to set buffer height large enough to avoid frequent buffer reflow on resize
+    $sz = $raw.WindowSize
+    $buf = $raw.BufferSize
+    $newBuf = $buf
+    $newBuf.Width = $sz.Width
+    $newBuf.Height = [Math]::Max($buf.Height, 300)
+    $raw.BufferSize = $newBuf
+}} catch {{
+    # Host may not allow RawUI changes; ignore
+}}
+
+# Set environment variables to point DSC to the unpacked binary and ensure pwsh folder is in PATH
+$env:DSC_HOST_PATH = {dscExeQuoted}
+$env:PATH = {pwshDirQuoted} + ';' + $env:PATH
+
+# Start transcript for a reliable, complete capture
+$transcriptPath = Join-Path $env:TEMP ('dsc_run_transcript_{Guid.NewGuid():N}.txt')
+try {{
+    Start-Transcript -Path $transcriptPath -Force
+}} catch {{
+    Write-Warning 'Failed to start transcript; output will still appear in the console.'
+}}
+
+Write-Host 'Invoking DSC. Console will remain open after completion for tech inspection.' -ForegroundColor Cyan
+Write-Host ''
+
+try {{
+    & {dscExeQuoted} config set -f {yamlQuoted}
+}} catch {{
+    Write-Error ""DSC invocation failed: $($_.Exception.Message)""
+}} finally {{
+    try {{ Stop-Transcript }} catch {{ }}
+}}
+
+Write-Host ''
+Write-Host 'DSC run complete. Transcript (if created): ' -NoNewline
+Write-Host $transcriptPath -ForegroundColor Yellow
+Write-Host ''
+Write-Host 'Leave this window open for inspection. Close it when finished.' -ForegroundColor Green
 ";
 
+            try
+            {
+                File.WriteAllText(tempPs1, psScript);
+            }
+            catch (Exception ex)
+            {
+                _log.Log($"Failed to write wrapper script {tempPs1} — {ex.Message}", "ERROR");
+                return Task.CompletedTask;
+            }
+
+            // Build ProcessStartInfo to run pwsh with the wrapper and keep console open
             var psi = new ProcessStartInfo(pwsh)
             {
-                UseShellExecute = true,
+                UseShellExecute = true, // required to show native console window
                 WindowStyle = ProcessWindowStyle.Normal,
                 WorkingDirectory = pwshDir,
-                Arguments = $"-NoExit -ExecutionPolicy Bypass -Command \"{psCommand.Trim().Replace("\"", "\\\"")}\""
+                Arguments = $"-NoExit -ExecutionPolicy Bypass -File \"{tempPs1}\""
             };
 
-            // Set Verb="runas" only when not already elevated
             if (!IsProcessElevated())
                 psi.Verb = "runas";
 
-            _log.Log($"Launching visible PowerShell to run DSC (DSC_HOST_PATH set to {dscExe}){(psi.Verb == "runas" ? " with elevation" : string.Empty)}", "INFO");
+            _log.Log($"Launching visible PowerShell wrapper for DSC (script: {tempPs1}){(psi.Verb == "runas" ? " with elevation" : "")}", "INFO");
 
             return Task.Run(() =>
             {
@@ -104,20 +163,18 @@ $env:PATH = '{pwshDirEscaped};' + $env:PATH;
                     else
                         _log.Log("PowerShell/DSC process exited (console left open for tech inspection)", "SUMMARY");
                 }
-                catch (Win32Exception wex) when ((uint)wex.ErrorCode == 0x80004005 || wex.NativeErrorCode == 1223)
+                catch (System.ComponentModel.Win32Exception wex) when (wex.NativeErrorCode == 1223)
                 {
-                    // 1223 = ERROR_CANCELLED (user cancelled UAC)
-                    _log.Log("Elevation was cancelled by the user. DSC run aborted.", "WARN");
+                    _log.Log("Elevation cancelled by user; DSC run aborted.", "WARN");
                 }
                 catch (Exception ex)
                 {
-                    _log.Log($"Failed to launch PowerShell for DSC — {ex.Message}", "ERROR");
+                    _log.Log($"Failed to launch PowerShell wrapper for DSC — {ex.Message}", "ERROR");
                 }
             });
         }
 
-        // Check if the current process is running with elevated (admin) privileges
-        // Used in RunDscSimpleAsync to decide whether to set Verb="runas"
+        // Helper to detect elevation
         private static bool IsProcessElevated()
         {
             using var identity = WindowsIdentity.GetCurrent();

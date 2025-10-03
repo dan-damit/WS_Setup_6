@@ -11,6 +11,6 @@ namespace WS_Setup_6.Core.Interfaces
             byte[] key,
             byte[] iv);
 
-        Task RunDscSimpleAsync(string yamlPath);
+        Task RunDscWithWrapperAsync(string yamlPath);
     }
 }
