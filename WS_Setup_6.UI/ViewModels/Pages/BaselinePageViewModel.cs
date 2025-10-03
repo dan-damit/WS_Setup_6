@@ -48,9 +48,6 @@ namespace WS_Setup_6.UI.ViewModels.Pages
         private string baselineStatusMessage = string.Empty;
 
         [ObservableProperty]
-        private double progressValue;
-
-        [ObservableProperty]
         [NotifyPropertyChangedFor(nameof(CanApplyBaseline))]
         private bool isApplyingBaseline;
 
@@ -126,12 +123,11 @@ namespace WS_Setup_6.UI.ViewModels.Pages
             try
             {
                 _ellipsisTimer.Start();
-                ProgressValue = 50;
+                _progressController.SetMessage("Installing dependencies…");
                 _log.Log("Installing dependencies", "INFO");
                 await _onboard.SetupDependenciesAsync();
 
                 _progressController.SetMessage("Installing Desired State Configuration v3…");
-                ProgressValue = 60;
                 _log.Log("Installing DSC v3", "INFO");
                 await _onboard.InstallDsc3Async();
 
@@ -139,12 +135,11 @@ namespace WS_Setup_6.UI.ViewModels.Pages
                 _log.Log("Decrypting baseline configuration", "INFO");
                 _baseline.DecryptConfig(_encYaml, _decYaml, _key, _iv);
 
-                ProgressValue = 70;
                 await Task.Yield();
 
                 if (File.Exists(_decYaml))
                 {
-                    ProgressValue = 85;
+                    _progressController.SetMessage("Applying Baseline via DSCv3");
                     _log.Log("Applying baseline via DSC", "INFO");
                     await _baseline.RunDscWithWrapperAsync(_decYaml);
                 }
@@ -164,10 +159,8 @@ namespace WS_Setup_6.UI.ViewModels.Pages
             finally
             {
                 _helpers.TryDelete(_decYaml, msg => _log.Log(msg, "INFO"));
-                ProgressValue = 90;
                 _progressController.SetMessage(
                     hadErrors ? "Baseline applied with errors." : "Baseline applied successfully.");
-                ProgressValue = 100;
 
                 _ellipsisTimer.Stop();
                 _dotCount = 0;
