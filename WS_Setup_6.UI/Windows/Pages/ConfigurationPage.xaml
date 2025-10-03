@@ -93,7 +93,7 @@
                                        HorizontalAlignment="Left"
                                        IsIndeterminate="True"
                                        Visibility="{Binding IsProgressVisible, Converter={StaticResource BoolToVis}}"
-                                       Foreground="{DynamicResource AccentColorBrush}"
+                                       Foreground="White"
                                        BorderBrush="Black"
                                        BorderThickness="1"
                                        Opacity="1" />

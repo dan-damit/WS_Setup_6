@@ -16,7 +16,7 @@ namespace WS_Setup_6.UI.ViewModels.Pages
         {
             _mainVm = mainVm;
             WelcomeMessage = "Workstation Onboarding Tool";
-            Instruction = "Version: 6.9.7  |  Build Date: 2025.10.02";
+            Instruction = "Version: 6.9.8  |  Build Date: 2025.10.03";
         }
 
         [ObservableProperty]

@@ -120,7 +120,7 @@
                                                Visibility="{Binding IsProgressVisible, Converter={StaticResource BoolToVis}}"
                                                BorderThickness="1"
                                                BorderBrush="{DynamicResource MahApps.Brushes.Accent}"
-                                               Foreground="{DynamicResource AccentColorBrush}"
+                                               Foreground="White"
                                                VerticalAlignment="Center" />
                 </StackPanel>
             </Grid>
