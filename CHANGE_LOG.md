@@ -52,3 +52,9 @@
 - Added tooltips and watermarks
 - Converted progress bars to indeterminate mode
 - Improved font sizing for readability
+
+### 2025-10-03 — Further UI polish
+- Changed branding to be generic
+- Changed theme to Dark.Steel
+- Changed Font coloring to be more readable in the Dark theme
+- Updated DSCv3 to pop open a PowerShell window for live feedback during DSC run
