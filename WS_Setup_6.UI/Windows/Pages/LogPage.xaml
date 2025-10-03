@@ -30,7 +30,7 @@
                      ItemsSource="{Binding LogEntries}"
                      behaviors:ListBoxExtensions.AutoScrollToEnd="True"
                      Background="Transparent"
-                     Foreground="{DynamicResource MahApps.Brushes.Accent}"
+                     Foreground="White"
                      ScrollViewer.VerticalScrollBarVisibility="Auto"
                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                      HorizontalContentAlignment="Stretch"
