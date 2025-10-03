@@ -50,13 +50,17 @@ namespace WS_Setup_6.Core.Services
         {
             _log.Log("Configuring baseline via DSC (visible PowerShell wrapper)", "INFO");
 
+            // locate DSC.exe and powershell.exe (legacy Windows PowerShell)
             var programFiles = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
             var dscExe = Path.Combine(programFiles, "DSC3", "DSC.exe");
-            var pwsh = Path.Combine(programFiles, "PowerShell", "7", "pwsh.exe");
 
-            if (!File.Exists(dscExe) || !File.Exists(pwsh))
+            // Prefer system powershell.exe (System32) to avoid 32-bit redirection
+            var systemFolder = Environment.GetFolderPath(Environment.SpecialFolder.System);
+            var powershellExe = Path.Combine(systemFolder, "WindowsPowerShell", "v1.0", "powershell.exe");
+
+            if (!File.Exists(dscExe) || !File.Exists(powershellExe))
             {
-                _log.Log($"Missing DSC.exe ({dscExe}) or pwsh.exe ({pwsh})", "ERROR");
+                _log.Log($"Missing DSC.exe ({dscExe}) or powershell.exe ({powershellExe})", "ERROR");
                 return Task.CompletedTask;
             }
 
@@ -64,7 +68,7 @@ namespace WS_Setup_6.Core.Services
             string QuoteForPs(string s) => $"'{s.Replace("'", "''")}'";
             var dscExeQuoted = QuoteForPs(dscExe);
             var yamlQuoted = QuoteForPs(yamlPath);
-            var pwshDir = Path.GetDirectoryName(pwsh) ?? string.Empty;
+            var pwshDir = Path.GetDirectoryName(powershellExe) ?? string.Empty;
             var pwshDirQuoted = QuoteForPs(pwshDir);
 
             // Create temporary ps1 wrapper
@@ -103,7 +107,7 @@ try {{
     Write-Warning 'Failed to start transcript; output will still appear in the console.'
 }}
 
-Write-Host 'Invoking DSC. Console will remain open after completion for tech inspection.' -ForegroundColor Cyan
+Write-Host 'Invoking DSC to apply Baseline configuration. Console will remain open after completion for tech inspection.' -ForegroundColor Cyan
 Write-Host ''
 
 try {{
@@ -115,7 +119,7 @@ try {{
 }}
 
 Write-Host ''
-Write-Host 'DSC run complete. Transcript (if created): ' -NoNewline
+Write-Host 'Apply Baseline run complete. Transcript (if created): ' -NoNewline
 Write-Host $transcriptPath -ForegroundColor Yellow
 Write-Host ''
 Write-Host 'Leave this window open for inspection. Close it when finished.' -ForegroundColor Green
@@ -131,19 +135,19 @@ Write-Host 'Leave this window open for inspection. Close it when finished.' -For
                 return Task.CompletedTask;
             }
 
-            // Build ProcessStartInfo to run pwsh with the wrapper and keep console open
-            var psi = new ProcessStartInfo(pwsh)
+            // Run using legacy powershell.exe
+            var psi = new ProcessStartInfo(powershellExe)
             {
-                UseShellExecute = true, // required to show native console window
+                UseShellExecute = true, // required to show the native console window
                 WindowStyle = ProcessWindowStyle.Normal,
-                WorkingDirectory = pwshDir,
+                WorkingDirectory = Path.GetDirectoryName(powershellExe) ?? Environment.CurrentDirectory,
                 Arguments = $"-NoExit -ExecutionPolicy Bypass -File \"{tempPs1}\""
             };
 
             if (!IsProcessElevated())
                 psi.Verb = "runas";
 
-            _log.Log($"Launching visible PowerShell wrapper for DSC (script: {tempPs1}){(psi.Verb == "runas" ? " with elevation" : "")}", "INFO");
+            _log.Log($"Launching visible Windows PowerShell wrapper for DSC (script: {tempPs1}){(psi.Verb == "runas" ? " with elevation" : "")}", "INFO");
 
             return Task.Run(() =>
             {
@@ -152,16 +156,16 @@ Write-Host 'Leave this window open for inspection. Close it when finished.' -For
                     using var proc = Process.Start(psi);
                     if (proc == null)
                     {
-                        _log.Log("Failed to start PowerShell for DSC", "ERROR");
+                        _log.Log("Failed to start Windows PowerShell for DSC", "ERROR");
                         return;
                     }
 
                     proc.WaitForExit();
 
                     if (proc.ExitCode != 0)
-                        _log.Log($"PowerShell/DSC exited with code {proc.ExitCode}", "ERROR");
+                        _log.Log($"Windows PowerShell/DSC exited with code {proc.ExitCode}", "ERROR");
                     else
-                        _log.Log("PowerShell/DSC process exited (console left open for tech inspection)", "SUMMARY");
+                        _log.Log("Windows PowerShell/DSC process exited (console left open for tech inspection)", "SUMMARY");
                 }
                 catch (System.ComponentModel.Win32Exception wex) when (wex.NativeErrorCode == 1223)
                 {
@@ -169,7 +173,7 @@ Write-Host 'Leave this window open for inspection. Close it when finished.' -For
                 }
                 catch (Exception ex)
                 {
-                    _log.Log($"Failed to launch PowerShell wrapper for DSC — {ex.Message}", "ERROR");
+                    _log.Log($"Failed to launch Windows PowerShell wrapper for DSC — {ex.Message}", "ERROR");
                 }
             });
         }
