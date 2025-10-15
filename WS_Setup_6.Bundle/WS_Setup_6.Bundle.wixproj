@@ -1,10 +1,10 @@
 <Project Sdk="WixToolset.Sdk/6.0.2" ToolsVersion="4.0">
   <PropertyGroup>
     <OutputType>Bundle</OutputType>
-    <OutputName>WS Setup</OutputName>
+    <OutputName>WS.Setup</OutputName>
     <ProductName>Workstation Onboarding</ProductName>
-    <ProductVersion>6.9.7.0</ProductVersion>
-	<FileVersion>6.9.7.0</FileVersion>
+    <ProductVersion>6.9.10.0</ProductVersion>
+	<FileVersion>6.9.10.0</FileVersion>
     <Manufacturer>Dan.Damit</Manufacturer>
     <ApplicationIcon>Assets\WSSetupIcon.ico</ApplicationIcon>
     <OutputPath>$(SolutionDir)Deploy\$(Configuration)\</OutputPath>
