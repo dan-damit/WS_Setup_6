@@ -1,7 +1,7 @@
 # 🖥️ WS Setup Tool
 
 **Author:** Dan Damit  
-**Email:** dan@thedamits.com  
+**Email:** dan.damit@outlook.com  
 **Platform:** Windows  
 **Tech Stack:** C#, .NET 8.0, WPF, MahApps.Metro, WiX
 
