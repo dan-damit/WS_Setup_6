@@ -23,7 +23,7 @@
 		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
 
 		<!-- Custom Version Stamp -->
-		<Version>6.9.$([System.DateTime]::Now.ToString("yyMM")).$([System.DateTime]::Now.ToString("ddHH"))</Version>
+		<Version>6.0.$([System.DateTime]::Now.ToString("yyMM")).$([System.DateTime]::Now.ToString("ddHH"))</Version>
 		<StartupObject>WS_Setup_6.UI.App</StartupObject>
 	</PropertyGroup>
 
