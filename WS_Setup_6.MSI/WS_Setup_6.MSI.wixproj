@@ -2,7 +2,7 @@
   <PropertyGroup>
     <OutputType>Package</OutputType>
     <ProductName>Workstation Setup</ProductName>
-    <ProductVersion>6.0.9.10</ProductVersion>
+    <ProductVersion>6.0.9.11</ProductVersion>
     <Manufacturer>Dan.Damit</Manufacturer>
     <!-- Where the MSI/Bundle output will go -->
     <OutputPath>$(SolutionDir)Deploy\$(Configuration)\</OutputPath>
