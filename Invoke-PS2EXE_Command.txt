@@ -1,1 +1,1 @@
-Invoke-PS2EXE -InputFile "BuildWS_Setup.ps1" -OutputFile "WSSetupBuilder.exe" -NoConsole -requireAdmin -Icon Assets\WSSetupIcon.ico
+Invoke-PS2EXE "C:\Users\dan\WS_Setup_6\BuildWS_Setup.ps1" "C:\Users\dan\WS_Setup_6\WSSetupBuilder.exe" -noConsole -noOutput -requireAdmin -Icon "C:\Users\dan\WS_Setup_6\Assets\WSSetupIcon.ico"

@@ -58,3 +58,7 @@
 - Changed theme to Dark.Steel
 - Changed Font coloring to be more readable in the Dark theme
 - Updated DSCv3 to pop open a PowerShell window for live feedback during DSC run
+
+### 2025-12-12 — Minor changes
+- Changed config.yml to 25H2 as target version during baseline run
+- Removed all Advantage branding within the config.yml to be more generic
