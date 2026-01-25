@@ -16,7 +16,7 @@
 
 ## 🎯 Purpose
 
-This is a personal project designed to streamline the onboarding process for new workstations. Originally built in PowerShell with Windows.Forms, it has since been fully rewritten in C# using WPF and MahApps.Metro for a modern, polished UI. This tool was also desiged from the standpoint of an MSP fleet deployment where the client sites varied quite a bit, so enterprise-style deployment tools weren't really a viable option.
+This is a personal project designed to streamline the onboarding process for new workstations. Originally built in PowerShell with Windows.Forms, it has since been fully rewritten in C# using WPF and MahApps.Metro for a modern, polished UI. This tool was also designed from the standpoint of an MSP fleet deployment where the client sites varied quite a bit, so enterprise-style deployment tools weren't really a viable option.
 
 ---
 
