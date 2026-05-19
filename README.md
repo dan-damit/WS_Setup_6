@@ -1,4 +1,4 @@
-# 🖥️ WS Setup Tool
+# WS Setup Tool
 
 **Author:** Dan Damit  
 **Email:** dan.damit@outlook.com  
@@ -7,20 +7,20 @@
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 1. The latest release tag has the most up-to-date version.
 2. Run `WS.Setup.exe` from the latest [Release link](https://github.com/dan-damit/WS_Setup_6/releases/tag/latest) on the main page.
 3. Ensure internet access for Onboarding tasks.
 
 ---
 
-## 🎯 Purpose
+## Purpose
 
 This is a personal project designed to streamline the onboarding process for new workstations. Originally built in PowerShell with Windows.Forms, it has since been fully rewritten in C# using WPF and MahApps.Metro for a modern, polished UI. This tool was also designed from the standpoint of an MSP fleet deployment where the client sites varied quite a bit, so enterprise-style deployment tools weren't really a viable option.
 
 ---
 
-## ⚙️ Goals
+## Goals
 
 - **Automation:** Eliminate manual setup steps through scripted workflows  
 - **Consistency:** Ensure every workstation is configured identically  
@@ -29,7 +29,7 @@ This is a personal project designed to streamline the onboarding process for new
 
 ---
 
-## 📦 Features
+## Features
 
 - GUI-driven setup flow with branded visuals
 - Find Agent button auto-seeds the Ninja Agent installer from Desktop
@@ -46,13 +46,13 @@ This is a personal project designed to streamline the onboarding process for new
 
 ---
 
-## 🧠 Why It Matters
+## Why It Matters
 
 Manual workstation setup is error-prone and time-consuming. This tool ensures every machine is onboarded with precision, eliminating missed steps and reducing variability. Whether you're provisioning one device or a fleet, this app brings clarity, speed, and repeatability to the process.
 
 ---
 
-## 🚀 Compatibility
+## Compatibility
 
 - Works across all Windows workstation models  
 - Requires internet access for some installer downloads  
@@ -60,7 +60,7 @@ Manual workstation setup is error-prone and time-consuming. This tool ensures ev
 
 ---
 
-## 📁 Repo Structure (Simplified)
+## Repo Structure (Simplified)
 
 - Assets - (Images, WS_Config files, Icons, etc)
 - Bundle - Final Package (WS Setup.exe)
